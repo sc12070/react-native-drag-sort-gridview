@@ -1,1 +1,0 @@
-{"version":3,"file":"FlatListDraggable.d.ts","sourceRoot":"","sources":["../../src/FlatListDraggable.tsx"],"names":[],"mappings":"AACA,OAAO,EAAY,aAAa,EAAE,SAAS,EAAE,MAAM,cAAc,CAAA;AAKjE,QAAA,MAAM,gBAAgB;;gBAGN,MAAM;iBACL,MAAM;eACR,OAAO;wBACE,SAAS;uBACV,MAAM;eACd,MAAM,GAAG,SAAS;;;eACmB,MAAM;UAAO,WAAW;6CAC1B,MAAM,MAAM,MAAM,KAAK,IAAI;iBAoD5E,CAAA;AAED,eAAe,gBAAgB,CAAA"}

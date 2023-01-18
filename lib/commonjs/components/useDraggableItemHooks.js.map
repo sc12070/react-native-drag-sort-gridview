@@ -1,1 +1,0 @@
-{"version":3,"names":["index","dragItemOriginIndex","isDragging","useMemo"],"sourceRoot":"../../src","sources":["useDraggableItemHooks.tsx"],"mappings":"gFAAA,4BAA+B,aAEhB,uBAMT,IALJA,MAAK,MAALA,KAAK,CACLC,mBAAmB,MAAnBA,mBAAmB,CAKnB,GAAMC,WAAU,CAAG,GAAAC,cAAO,EAAC,iBAAMH,MAAK,GAAKC,mBAAmB,GAAE,CAACD,KAAK,CAAEC,mBAAmB,CAAC,CAAC,CAE7F,MAAO,CACLC,UAAU,CAAVA,UACF,CAAC,CACH,CAAC"}
