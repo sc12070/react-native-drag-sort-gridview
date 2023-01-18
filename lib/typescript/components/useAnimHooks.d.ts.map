@@ -1,0 +1,1 @@
+{"version":3,"file":"useAnimHooks.d.ts","sourceRoot":"","sources":["../../../src/components/useAnimHooks.tsx"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAU,MAAM,cAAc,CAAA;;eAkBlC,MAAM;gBACL,MAAM;gBACN,MAAM;eACP,OAAO;WACX,MAAM;yBACQ,MAAM,GAAG,SAAS;yBAClB,MAAM,GAAG,SAAS;sBACrB,MAAM;;;;;;;AAjB1B,wBAsLC"}
