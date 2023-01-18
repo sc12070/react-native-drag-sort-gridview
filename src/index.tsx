@@ -1,5 +1,5 @@
 // main index.js
 
-import DragSortGridview from './DragSortGridview'
+import DraggableGridView from './DraggableGridView'
 
-export default DragSortGridview
+export default DraggableGridView

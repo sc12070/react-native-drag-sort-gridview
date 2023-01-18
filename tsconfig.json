@@ -1,16 +1,15 @@
-// prettier-ignore
 {
   "compilerOptions": {
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*"],
+      "*": ["src/*"]
     },
     "esModuleInterop": true,
     "target": "esnext",
     "module": "commonjs",
     "jsx": "react-native",
-    "types": ["react-native"],
+    "types": ["react-native"]
   },
   "exclude": ["node_modules"],
   "include": ["src"]

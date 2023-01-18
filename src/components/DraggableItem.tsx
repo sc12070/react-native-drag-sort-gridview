@@ -1,5 +1,5 @@
 import React from 'react'
-import { Animated } from 'react-native'
+import { Animated, ViewStyle } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import styles from './styles'
 import useDraggableItemHooks from './useDraggableItemHooks'
@@ -13,6 +13,7 @@ const DraggableItem = ({
   itemHeight,
   numColumns,
   isEditing,
+  shouldVibrate,
   index,
   dragItemOriginIndex,
   dragItemTargetIndex,
@@ -25,8 +26,9 @@ const DraggableItem = ({
   itemWidth: number
   itemHeight: number
   numColumns: number
-  style: any
+  style?: ViewStyle
   isEditing: boolean
+  shouldVibrate: boolean
   index: number
   dragItemOriginIndex: number | undefined
   dragItemTargetIndex: number | undefined
@@ -45,6 +47,7 @@ const DraggableItem = ({
     itemHeight,
     numColumns,
     isEditing,
+    shouldVibrate,
     isDragging,
     index,
     dragItemOriginIndex,
@@ -84,7 +87,9 @@ const DraggableItem = ({
         },
         isDragging && styles.dragging
       ]}>
-      <Reanimated.View {...panResponder.panHandlers} style={animatedStyles}>
+      <Reanimated.View
+        {...panResponder.panHandlers}
+        style={[styles.reanimatedWrapper, animatedStyles]}>
         {children}
       </Reanimated.View>
     </Animated.View>

@@ -19,6 +19,7 @@ export default ({
   itemHeight,
   numColumns,
   isEditing,
+  shouldVibrate,
   isDragging,
   index,
   dragItemOriginIndex,
@@ -29,6 +30,7 @@ export default ({
   itemHeight: number
   numColumns: number
   isEditing: boolean
+  shouldVibrate: boolean
   isDragging: boolean
   index: number
   dragItemOriginIndex: number | undefined
@@ -145,12 +147,15 @@ export default ({
   }, [index, itemWidth, itemHeight, numColumns, movementOffset])
 
   useEffect(() => {
+    if (shouldVibrate === false) {
+      return
+    }
     if (isEditing === true) {
       setTimeout(startRotate, Math.random() * 300)
     } else {
       stopRotate()
     }
-  }, [isEditing, movementOffset, startRotate, stopRotate])
+  }, [isEditing, shouldVibrate, startRotate, stopRotate])
 
   useEffect(() => {
     if (isDragging || !isEditing) {

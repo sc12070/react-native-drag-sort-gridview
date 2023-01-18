@@ -4,16 +4,29 @@ import DraggableItem from './components/DraggableItem'
 import styles from './styles'
 import useFlatListDraggableHooks from './useFlatListDraggableHooks'
 
-const DragSortGridview = <T,>(
+const DraggableGridView = <T,>(
   props: FlatListProps<T> & {
     data: Array<T>
     listWidth?: number
     itemHeight?: number
     isEditing: boolean
-    itemContainerStyle: ViewStyle
+    shouldVibrate?: boolean
+    itemContainerStyle?: ViewStyle
     animMoveDuration?: number
     debounce?: number | undefined
-    renderItem: ({ item, index }: { item: T; index: number }) => JSX.Element
+    renderItem: ({
+      item,
+      index,
+      separators
+    }: {
+      item: T
+      index: number
+      separators: {
+        highlight: () => void
+        unhighlight: () => void
+        updateProps: (select: 'leading' | 'trailing', newProps: any) => void
+      }
+    }) => JSX.Element
     onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
   }
 ) => {
@@ -21,6 +34,7 @@ const DragSortGridview = <T,>(
     style,
     data,
     isEditing,
+    shouldVibrate = true,
     itemContainerStyle,
     listWidth,
     numColumns,
@@ -40,7 +54,19 @@ const DragSortGridview = <T,>(
     onEndDrag
   } = useFlatListDraggableHooks({ data, listWidth, numColumns, debounce, onOrderChanged })
 
-  const renderItem = ({ item, index }: { item: T; index: number }) => (
+  const renderItem = ({
+    item,
+    index,
+    separators
+  }: {
+    item: T
+    index: number
+    separators: {
+      highlight: () => void
+      unhighlight: () => void
+      updateProps: (select: 'leading' | 'trailing', newProps: any) => void
+    }
+  }) => (
     <DraggableItem
       style={itemContainerStyle}
       itemWidth={itemWidth}
@@ -50,11 +76,12 @@ const DragSortGridview = <T,>(
       dragItemTargetIndex={dragToIndex}
       index={index}
       isEditing={isEditing}
+      shouldVibrate={shouldVibrate}
       animMoveDuration={animMoveDuration || 1000}
       onStartDrag={onStartDrag}
       updateDragToIndex={updateDragToIndex}
       onEndDrag={onEndDrag}>
-      {props.renderItem({ item, index })}
+      {props.renderItem({ item, index, separators })}
     </DraggableItem>
   )
 
@@ -68,4 +95,4 @@ const DragSortGridview = <T,>(
   )
 }
 
-export default DragSortGridview
+export default DraggableGridView

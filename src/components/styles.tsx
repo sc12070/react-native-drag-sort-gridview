@@ -15,6 +15,12 @@ const styles = StyleSheet.create({
   },
   dragging: {
     zIndex: 1
+  },
+  reanimatedWrapper: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 
