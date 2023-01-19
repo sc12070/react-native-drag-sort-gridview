@@ -4,6 +4,8 @@ import { Animated, PanResponder } from 'react-native'
 export default ({
   itemWidth,
   itemHeight,
+  sectionWidth,
+  sectionHeight,
   numColumns,
   index,
   isEditing,
@@ -13,6 +15,8 @@ export default ({
 }: {
   itemWidth: number
   itemHeight: number
+  sectionWidth: number
+  sectionHeight: number
   numColumns: number
   index: number
   isEditing: boolean
@@ -20,8 +24,6 @@ export default ({
   updateDragToIndex: (index: number | undefined) => void
   onEndDrag: (from: number, to: number) => void
 }) => {
-  const sectionWidth = useMemo(() => itemWidth / 2, [itemWidth])
-  const sectionHeight = useMemo(() => itemHeight / 2, [itemHeight])
   const row = useMemo(() => index % numColumns, [index, numColumns])
   const column = useMemo(() => Math.floor(index / numColumns), [index, numColumns])
   const normaliseXOffset = useMemo(

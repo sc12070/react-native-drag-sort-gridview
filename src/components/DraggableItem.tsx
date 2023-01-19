@@ -11,6 +11,8 @@ const DraggableItem = ({
   style,
   itemWidth,
   itemHeight,
+  sectionWidth,
+  sectionHeight,
   numColumns,
   isEditing,
   shouldVibrate,
@@ -25,6 +27,8 @@ const DraggableItem = ({
   children?: JSX.Element
   itemWidth: number
   itemHeight: number
+  sectionWidth: number
+  sectionHeight: number
   numColumns: number
   style?: ViewStyle
   isEditing: boolean
@@ -58,6 +62,8 @@ const DraggableItem = ({
   const { panResponder, dragXAnim, dragYAnim } = usePanResponderViewHooks({
     itemWidth,
     itemHeight,
+    sectionWidth,
+    sectionHeight,
     numColumns,
     index,
     isEditing,

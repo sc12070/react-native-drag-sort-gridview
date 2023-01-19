@@ -1,8 +1,8 @@
 import React from 'react'
-import { FlatList, FlatListProps, ViewStyle } from 'react-native'
+import { FlatList, FlatListProps, ListRenderItemInfo, ViewStyle } from 'react-native'
 import DraggableItem from './components/DraggableItem'
 import styles from './styles'
-import useFlatListDraggableHooks from './useFlatListDraggableHooks'
+import useDraggableGridViewHooks from './useDraggableGridViewHooks'
 
 const DraggableGridView = <T,>(
   props: FlatListProps<T> & {
@@ -14,19 +14,7 @@ const DraggableGridView = <T,>(
     itemContainerStyle?: ViewStyle
     animMoveDuration?: number
     debounce?: number | undefined
-    renderItem: ({
-      item,
-      index,
-      separators
-    }: {
-      item: T
-      index: number
-      separators: {
-        highlight: () => void
-        unhighlight: () => void
-        updateProps: (select: 'leading' | 'trailing', newProps: any) => void
-      }
-    }) => JSX.Element
+    renderItem: (info: ListRenderItemInfo<T>) => React.ReactElement | null
     onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
   }
 ) => {
@@ -37,8 +25,8 @@ const DraggableGridView = <T,>(
     shouldVibrate = true,
     itemContainerStyle,
     listWidth,
+    itemHeight: propsItemHeight,
     numColumns,
-    itemHeight,
     animMoveDuration,
     debounce,
     onOrderChanged
@@ -49,39 +37,39 @@ const DraggableGridView = <T,>(
     dragToIndex,
     isEnableScroll,
     itemWidth,
+    itemHeight,
+    sectionWidth,
+    sectionHeight,
     onStartDrag,
     updateDragToIndex,
     onEndDrag
-  } = useFlatListDraggableHooks({ data, listWidth, numColumns, debounce, onOrderChanged })
+  } = useDraggableGridViewHooks({
+    data,
+    listWidth,
+    propsItemHeight,
+    numColumns,
+    debounce,
+    onOrderChanged
+  })
 
-  const renderItem = ({
-    item,
-    index,
-    separators
-  }: {
-    item: T
-    index: number
-    separators: {
-      highlight: () => void
-      unhighlight: () => void
-      updateProps: (select: 'leading' | 'trailing', newProps: any) => void
-    }
-  }) => (
+  const renderItem = (info: ListRenderItemInfo<T>) => (
     <DraggableItem
       style={itemContainerStyle}
       itemWidth={itemWidth}
-      itemHeight={itemHeight || itemWidth}
+      itemHeight={itemHeight}
+      sectionWidth={sectionWidth}
+      sectionHeight={sectionHeight}
       numColumns={numColumns || 1}
       dragItemOriginIndex={dragIndex}
       dragItemTargetIndex={dragToIndex}
-      index={index}
+      index={info.index}
       isEditing={isEditing}
       shouldVibrate={shouldVibrate}
       animMoveDuration={animMoveDuration || 1000}
       onStartDrag={onStartDrag}
       updateDragToIndex={updateDragToIndex}
       onEndDrag={onEndDrag}>
-      {props.renderItem({ item, index, separators })}
+      <>{props.renderItem(info)}</>
     </DraggableItem>
   )
 

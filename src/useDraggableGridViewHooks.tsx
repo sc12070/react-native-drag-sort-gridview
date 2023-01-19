@@ -6,12 +6,14 @@ export default <T,>({
   data,
   debounce,
   listWidth,
+  propsItemHeight,
   numColumns,
   onOrderChanged
 }: {
   data: Array<T>
   debounce?: number | undefined
   listWidth: number | undefined
+  propsItemHeight?: number | undefined
   numColumns: number | undefined
   onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
 }) => {
@@ -25,6 +27,9 @@ export default <T,>({
     () => (listWidth || Dimensions.get('screen').width) / (numColumns || 1),
     [listWidth, numColumns]
   )
+  const itemHeight = useMemo(() => propsItemHeight || itemWidth, [propsItemHeight, itemWidth])
+  const sectionWidth = useMemo(() => itemWidth / 2, [itemWidth])
+  const sectionHeight = useMemo(() => itemHeight / 2, [itemHeight])
 
   const onStartDrag = useCallback((index: number) => {
     setIsEnableScroll(false)
@@ -72,6 +77,9 @@ export default <T,>({
     dragToIndex,
     isEnableScroll,
     itemWidth,
+    itemHeight,
+    sectionWidth,
+    sectionHeight,
     onStartDrag,
     updateDragToIndex,
     onEndDrag
