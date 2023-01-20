@@ -16,10 +16,14 @@ const DraggableItem = ({
   numColumns,
   isEditing,
   shouldVibrate,
+  shouldAnimOnRelease,
   index,
+  itemLength,
   dragItemOriginIndex,
   dragItemTargetIndex,
   animMoveDuration,
+  lockTouch,
+  unlockTouch,
   onStartDrag,
   updateDragToIndex,
   onEndDrag
@@ -33,10 +37,14 @@ const DraggableItem = ({
   style?: ViewStyle
   isEditing: boolean
   shouldVibrate: boolean
+  shouldAnimOnRelease: boolean
   index: number
+  itemLength: number
   dragItemOriginIndex: number | undefined
   dragItemTargetIndex: number | undefined
   animMoveDuration: number
+  lockTouch: () => void
+  unlockTouch: () => void
   onStartDrag: (index: number) => void
   updateDragToIndex: (index: number | undefined) => void
   onEndDrag: (from: number, to: number) => void
@@ -66,7 +74,12 @@ const DraggableItem = ({
     sectionHeight,
     numColumns,
     index,
+    itemLength,
     isEditing,
+    animMoveDuration,
+    shouldAnimOnRelease,
+    lockTouch,
+    unlockTouch,
     onStartDrag,
     updateDragToIndex,
     onEndDrag

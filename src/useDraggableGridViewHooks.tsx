@@ -17,6 +17,7 @@ export default <T,>({
   numColumns: number | undefined
   onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
 }) => {
+  const [isLock, setIsLock] = useState<boolean>(false)
   const [isEnableScroll, setIsEnableScroll] = useState<boolean>(true)
   const [dragIndex, setDragIndex] = useState<number | undefined>(undefined)
   const [dragToIndex, setDragToIndex] = useState<number | undefined>(undefined)
@@ -30,6 +31,10 @@ export default <T,>({
   const itemHeight = useMemo(() => propsItemHeight || itemWidth, [propsItemHeight, itemWidth])
   const sectionWidth = useMemo(() => itemWidth / 2, [itemWidth])
   const sectionHeight = useMemo(() => itemHeight / 2, [itemHeight])
+
+  const lockTouch = useCallback(() => setIsLock(true), [])
+
+  const unlockTouch = useCallback(() => setIsLock(false), [])
 
   const onStartDrag = useCallback((index: number) => {
     setIsEnableScroll(false)
@@ -73,6 +78,7 @@ export default <T,>({
   )
 
   return {
+    isLock,
     dragIndex,
     dragToIndex,
     isEnableScroll,
@@ -80,6 +86,8 @@ export default <T,>({
     itemHeight,
     sectionWidth,
     sectionHeight,
+    lockTouch,
+    unlockTouch,
     onStartDrag,
     updateDragToIndex,
     onEndDrag

@@ -47,20 +47,22 @@ export default ({
     return {
       transform: [
         {
-          translateX: isDragging
-            ? movementOffset.value.x
-            : withTiming(movementOffset.value.x, {
-                duration: animMoveDuration,
-                easing: Easing.out(Easing.exp)
-              })
+          translateX:
+            dragItemTargetIndex === undefined || isDragging
+              ? movementOffset.value.x
+              : withTiming(movementOffset.value.x, {
+                  duration: animMoveDuration,
+                  easing: Easing.out(Easing.exp)
+                })
         },
         {
-          translateY: isDragging
-            ? movementOffset.value.y
-            : withTiming(movementOffset.value.y, {
-                duration: animMoveDuration,
-                easing: Easing.out(Easing.exp)
-              })
+          translateY:
+            dragItemTargetIndex === undefined || isDragging
+              ? movementOffset.value.y
+              : withTiming(movementOffset.value.y, {
+                  duration: animMoveDuration,
+                  easing: Easing.out(Easing.exp)
+                })
         },
         { rotateZ: `${rotationOffset.value}deg` }
       ]
