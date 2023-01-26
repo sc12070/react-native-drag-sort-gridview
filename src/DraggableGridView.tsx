@@ -40,8 +40,9 @@ const DraggableGridView = <T,>(
 
   const {
     isLock,
-    dragIndex,
-    dragToIndex,
+    isDragging,
+    count,
+    animDirectionArray,
     isEnableScroll,
     itemWidth,
     itemHeight,
@@ -70,9 +71,9 @@ const DraggableGridView = <T,>(
       sectionWidth={sectionWidth}
       sectionHeight={sectionHeight}
       numColumns={numColumns || 1}
-      itemLength={data.length}
-      dragItemOriginIndex={dragIndex}
-      dragItemTargetIndex={dragToIndex}
+      itemLength={count}
+      isDragging={isDragging}
+      animDirection={animDirectionArray[index]}
       index={index}
       isEditing={isEditing}
       shouldVibrate={shouldVibrate}

@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { MOVEMENT } from '../models'
+import { useCallback, useEffect } from 'react'
 import {
   Easing,
   useAnimatedStyle,
@@ -8,12 +9,6 @@ import {
   withTiming
 } from 'react-native-reanimated'
 
-enum MOVEMENT {
-  restore,
-  prev,
-  next
-}
-
 export default ({
   itemWidth,
   itemHeight,
@@ -21,9 +16,9 @@ export default ({
   isEditing,
   shouldVibrate,
   isDragging,
+  isDraggingItem,
   index,
-  dragItemOriginIndex,
-  dragItemTargetIndex,
+  animDirection,
   animMoveDuration
 }: {
   itemWidth: number
@@ -32,13 +27,11 @@ export default ({
   isEditing: boolean
   shouldVibrate: boolean
   isDragging: boolean
+  isDraggingItem: boolean
   index: number
-  dragItemOriginIndex: number | undefined
-  dragItemTargetIndex: number | undefined
+  animDirection: MOVEMENT
   animMoveDuration: number
 }) => {
-  const isMoved = useRef<boolean>(false)
-
   const movementOffset = useSharedValue({ x: 0, y: 0 })
   const rotationOffset = useSharedValue(0)
 
@@ -48,7 +41,7 @@ export default ({
       transform: [
         {
           translateX:
-            dragItemTargetIndex === undefined || isDragging
+            !isDragging || isDraggingItem
               ? movementOffset.value.x
               : withTiming(movementOffset.value.x, {
                   duration: animMoveDuration,
@@ -57,7 +50,7 @@ export default ({
         },
         {
           translateY:
-            dragItemTargetIndex === undefined || isDragging
+            !isDragging || isDraggingItem
               ? movementOffset.value.y
               : withTiming(movementOffset.value.y, {
                   duration: animMoveDuration,
@@ -83,35 +76,7 @@ export default ({
     rotationOffset.value = 0
   }, [rotationOffset])
 
-  const movement = useMemo(() => {
-    if (dragItemOriginIndex === undefined || dragItemTargetIndex === undefined) {
-      return MOVEMENT.restore
-    }
-    if (dragItemTargetIndex < dragItemOriginIndex) {
-      // drag to prev
-      if (index > dragItemOriginIndex) {
-        return MOVEMENT.restore
-      }
-      if (index >= dragItemTargetIndex) {
-        return MOVEMENT.next
-      }
-    } else if (dragItemTargetIndex > dragItemOriginIndex) {
-      // drag to next
-      if (index < dragItemOriginIndex) {
-        return MOVEMENT.restore
-      }
-      if (index <= dragItemTargetIndex) {
-        return MOVEMENT.prev
-      }
-    }
-    return MOVEMENT.restore
-  }, [index, dragItemOriginIndex, dragItemTargetIndex])
-
   const restore = useCallback(() => {
-    if (isMoved.current === false) {
-      return
-    }
-    isMoved.current = false
     movementOffset.value = {
       x: 0,
       y: 0
@@ -119,7 +84,6 @@ export default ({
   }, [movementOffset])
 
   const movePrev = useCallback(() => {
-    isMoved.current = true
     if (index % numColumns === 0) {
       movementOffset.value = {
         x: itemWidth * (numColumns - 1),
@@ -134,7 +98,6 @@ export default ({
   }, [index, itemWidth, itemHeight, numColumns, movementOffset])
 
   const moveNext = useCallback(() => {
-    isMoved.current = true
     if (index % numColumns === numColumns - 1) {
       movementOffset.value = {
         x: -itemWidth * (numColumns - 1),
@@ -160,10 +123,10 @@ export default ({
   }, [isEditing, shouldVibrate, startRotate, stopRotate])
 
   useEffect(() => {
-    if (isDragging || !isEditing) {
+    if (isDraggingItem || !isEditing) {
       return
     }
-    switch (movement) {
+    switch (animDirection) {
       case MOVEMENT.restore:
         restore()
         break
@@ -174,7 +137,7 @@ export default ({
         movePrev()
         break
     }
-  }, [isDragging, isEditing, movement, moveNext, movePrev, restore])
+  }, [isDraggingItem, isEditing, animDirection, moveNext, movePrev, restore])
 
   return {
     movementOffset,

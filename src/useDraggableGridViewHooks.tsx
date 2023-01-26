@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import update from 'react-addons-update'
 import { Dimensions } from 'react-native'
+import { MOVEMENT } from './models'
 
 export default <T,>({
   data,
@@ -21,6 +22,36 @@ export default <T,>({
   const [isEnableScroll, setIsEnableScroll] = useState<boolean>(true)
   const [dragIndex, setDragIndex] = useState<number | undefined>(undefined)
   const [dragToIndex, setDragToIndex] = useState<number | undefined>(undefined)
+  const count = useMemo<number>(() => data.length, [data])
+  const isDragging = useMemo<boolean>(() => dragIndex !== undefined, [dragIndex])
+  const animDirectionArray = useMemo<Array<MOVEMENT>>(() => {
+    return new Array(count).fill(0).map((_, index: number) => {
+      if (dragIndex === undefined || dragToIndex === undefined) {
+        return MOVEMENT.restore
+      }
+      if (dragIndex === index) {
+        return MOVEMENT.dragging
+      }
+      if (dragToIndex < dragIndex) {
+        // drag to prev
+        if (index > dragIndex) {
+          return MOVEMENT.restore
+        }
+        if (index >= dragToIndex) {
+          return MOVEMENT.next
+        }
+      } else if (dragToIndex > dragIndex) {
+        // drag to next
+        if (index < dragIndex) {
+          return MOVEMENT.restore
+        }
+        if (index <= dragToIndex) {
+          return MOVEMENT.prev
+        }
+      }
+      return MOVEMENT.restore
+    })
+  }, [count, dragIndex, dragToIndex])
 
   const timerRef = useRef<number | undefined>()
 
@@ -79,8 +110,9 @@ export default <T,>({
 
   return {
     isLock,
-    dragIndex,
-    dragToIndex,
+    isDragging,
+    count,
+    animDirectionArray,
     isEnableScroll,
     itemWidth,
     itemHeight,

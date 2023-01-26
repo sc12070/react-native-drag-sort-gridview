@@ -1,15 +1,10 @@
+import { MOVEMENT } from '../models'
 import { useMemo } from 'react'
 
-export default ({
-  index,
-  dragItemOriginIndex
-}: {
-  index: number | undefined
-  dragItemOriginIndex: number | undefined
-}) => {
-  const isDragging = useMemo(() => index === dragItemOriginIndex, [index, dragItemOriginIndex])
+export default ({ animDirection }: { animDirection: MOVEMENT }) => {
+  const isDraggingItem = useMemo(() => animDirection === MOVEMENT.dragging, [animDirection])
 
   return {
-    isDragging
+    isDraggingItem
   }
 }

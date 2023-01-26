@@ -1,4 +1,5 @@
-import React from 'react'
+import { MOVEMENT } from '../models'
+import React, { memo } from 'react'
 import { Animated, ViewStyle } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import styles from './styles'
@@ -19,8 +20,8 @@ const DraggableItem = ({
   shouldAnimOnRelease,
   index,
   itemLength,
-  dragItemOriginIndex,
-  dragItemTargetIndex,
+  isDragging,
+  animDirection,
   animMoveDuration,
   lockTouch,
   unlockTouch,
@@ -40,8 +41,8 @@ const DraggableItem = ({
   shouldAnimOnRelease: boolean
   index: number
   itemLength: number
-  dragItemOriginIndex: number | undefined
-  dragItemTargetIndex: number | undefined
+  isDragging: boolean
+  animDirection: MOVEMENT
   animMoveDuration: number
   lockTouch: () => void
   unlockTouch: () => void
@@ -49,9 +50,8 @@ const DraggableItem = ({
   updateDragToIndex: (index: number | undefined) => void
   onEndDrag: (from: number, to: number) => void
 }) => {
-  const { isDragging } = useDraggableItemHooks({
-    index,
-    dragItemOriginIndex
+  const { isDraggingItem } = useDraggableItemHooks({
+    animDirection
   })
 
   const { animatedStyles } = useReanimHooks({
@@ -61,9 +61,9 @@ const DraggableItem = ({
     isEditing,
     shouldVibrate,
     isDragging,
+    isDraggingItem,
     index,
-    dragItemOriginIndex,
-    dragItemTargetIndex,
+    animDirection,
     animMoveDuration
   })
 
@@ -104,7 +104,7 @@ const DraggableItem = ({
             }
           ]
         },
-        isDragging && styles.dragging
+        isDraggingItem && styles.dragging
       ]}>
       <Reanimated.View
         {...panResponder.panHandlers}
@@ -115,4 +115,4 @@ const DraggableItem = ({
   )
 }
 
-export default DraggableItem
+export default memo(DraggableItem)
