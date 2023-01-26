@@ -1,8 +1,9 @@
 module.exports = {
   root: true,
-  extends: '@react-native-community',
+  extends: ['@react-native-community', 'prettier'],
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
+  ignorePatterns: ['dist/*'],
   overrides: [
     {
       files: ['*.js', '*.ts', '*.tsx'],

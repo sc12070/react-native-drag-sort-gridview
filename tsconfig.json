@@ -1,16 +1,14 @@
 {
+  "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
     "skipLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*"]
-    },
-    "esModuleInterop": true,
-    "target": "esnext",
-    "module": "commonjs",
-    "jsx": "react-native",
-    "types": ["react-native"]
+      "*": ["src/*"],
+      "test/*": ["test/*"],
+      "underscore": ["lodash"]
+    }
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "include": ["src"]
 }
