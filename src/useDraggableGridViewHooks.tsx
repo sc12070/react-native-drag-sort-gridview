@@ -5,16 +5,16 @@ import { MOVEMENT } from './models'
 
 export default <T,>({
   data,
-  debounce,
-  listWidth,
   propsItemHeight,
+  propsItemWidth,
+  debounce,
   numColumns,
   onOrderChanged
 }: {
   data: Array<T>
   debounce?: number | undefined
-  listWidth: number | undefined
   propsItemHeight?: number | undefined
+  propsItemWidth?: number | undefined
   numColumns: number | undefined
   onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
 }) => {
@@ -56,8 +56,8 @@ export default <T,>({
   const timerRef = useRef<number | undefined>()
 
   const itemWidth = useMemo(
-    () => (listWidth || Dimensions.get('screen').width) / (numColumns || 1),
-    [listWidth, numColumns]
+    () => propsItemWidth ?? Dimensions.get('screen').width / (numColumns || 1),
+    [propsItemWidth, numColumns]
   )
   const itemHeight = useMemo(() => propsItemHeight || itemWidth, [propsItemHeight, itemWidth])
   const sectionWidth = useMemo(() => itemWidth / 2, [itemWidth])

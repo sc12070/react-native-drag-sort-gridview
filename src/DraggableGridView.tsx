@@ -9,6 +9,7 @@ const DraggableGridView = <T,>(
     data: Array<T>
     listWidth?: number
     itemHeight?: number
+    itemWidth?: number
     isEditing: boolean
     shouldVibrate?: boolean
     shouldAnimOnRelease?: boolean
@@ -31,6 +32,7 @@ const DraggableGridView = <T,>(
     itemContainerStyle,
     listWidth,
     itemHeight: propsItemHeight,
+    itemWidth: propsItemWidth,
     numColumns,
     animMoveDuration,
     debounce,
@@ -55,8 +57,8 @@ const DraggableGridView = <T,>(
     onEndDrag
   } = useDraggableGridViewHooks({
     data,
-    listWidth,
     propsItemHeight,
+    propsItemWidth,
     numColumns,
     debounce,
     onOrderChanged
