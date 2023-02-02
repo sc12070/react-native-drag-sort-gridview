@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, ScrollViewProps, View, ViewStyle } from 'react-native'
+import { ImageStyle, ScrollView, ScrollViewProps, StyleProp, View, ViewStyle } from 'react-native'
 import DraggableItem from './components/DraggableItem'
 import styles from './styles'
 import useDraggableGridViewHooks from './useDraggableGridViewHooks'
@@ -24,6 +24,7 @@ const DraggableGridView = <T,>(
     onLongPress: () => void;
     onRemove?: (index: number) => void;
     notIncludeRemoveIn?: Array<number>;
+    closeIconStyle?: StyleProp<ImageStyle>;
   }
 ) => {
   const {
@@ -45,7 +46,8 @@ const DraggableGridView = <T,>(
     onEndDrag: onPropsEndDrag,
     onLongPress,
     onRemove,
-    notIncludeRemoveIn
+    notIncludeRemoveIn,
+    closeIconStyle
   } = props
 
   const [isScrolling, setIsScrolling] = React.useState(false);
@@ -99,11 +101,20 @@ const DraggableGridView = <T,>(
       onEndDrag={onEndDrag}
       onLongPress={onLongPress}
       isScrolling={isScrolling}
+      propsCloseIconStyle={closeIconStyle}
       onRemove={notIncludeRemoveIn ? !notIncludeRemoveIn.includes(index) && onRemove : onRemove}
       >
       <>{props.renderItem({ item, index })}</>
     </DraggableItem>
   )
+  const onScrollEndDrag = () => {
+    console.log('onScrollEndDrag');
+    setIsScrolling(false);
+  }
+  const onScrollBeginDrag = () => {
+    console.log('onScrollBeginDrag');
+    setIsScrolling(true);
+  }
 
   return (
     <>
@@ -112,8 +123,8 @@ const DraggableGridView = <T,>(
         style={[styles.list, style, { width: listWidth }]}
         contentContainerStyle={[contentContainerStyle, styles.content]}
         scrollEnabled={isEnableScroll}
-        onScrollEndDrag={() => setIsScrolling(false)}
-        onMomentumScrollBegin={() => setIsScrolling(true)}>
+        onScrollEndDrag={onScrollEndDrag}
+        onScrollBeginDrag={onScrollBeginDrag}>
         {data.map((item: T, index: number) => renderItem({ item, index }))}
       </ScrollView>
       {isLock === true && <View style={styles.uiBlock} />}

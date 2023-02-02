@@ -1,6 +1,6 @@
 import { MOVEMENT } from '../models'
-import React, { memo, useCallback, useRef } from 'react'
-import { Animated, GestureResponderEvent, TouchableOpacity, View, ViewStyle, Image } from 'react-native'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
+import { Animated, GestureResponderEvent, TouchableOpacity, View, ViewStyle, Image, StyleProp, ImageStyle } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import styles from './styles'
 import useDraggableItemHooks from './useDraggableItemHooks'
@@ -31,7 +31,8 @@ const DraggableItem = ({
     onEndDrag,
     onLongPress,
     isScrolling,
-    onRemove
+    onRemove,
+    propsCloseIconStyle,
 }: {
     children?: JSX.Element
     itemWidth: number
@@ -56,6 +57,7 @@ const DraggableItem = ({
     onLongPress: () => void;
     isScrolling: boolean;
     onRemove?: (index: number) => void;
+    propsCloseIconStyle?: StyleProp<ImageStyle>;
 }) => {
     const { isDraggingItem } = useDraggableItemHooks({
         animDirection
@@ -97,22 +99,26 @@ const DraggableItem = ({
     const onTouchStart = useCallback(() => {
         clearTimeout(timerId.current);
         if (isScrolling) return;
+        console.debug('onTouchStart');
         timerId.current = setTimeout(() => {
             onLongPress();
         }, 1000);
     }, [isScrolling, onLongPress])
-    const onTouchCancel = () => {
+    const onClearTouch = () => {
+        console.debug('onClearTouch');
         clearTimeout(timerId.current);
     }
     const onReleaseClose = (event: GestureResponderEvent) => {
-        onTouchCancel();
         event.preventDefault();
         event.stopPropagation();
+        console.debug('onReleaseClose')
+        onClearTouch();
     }
     const onClose = (event: GestureResponderEvent) => {
-        onTouchCancel();
         event.preventDefault();
         event.stopPropagation();
+        console.debug('onClose')
+        onClearTouch();
         onRemove(index);
     }
 
@@ -140,14 +146,15 @@ const DraggableItem = ({
             <Reanimated.View
                 {...panResponder.panHandlers}
                 onTouchStart={onTouchStart}
-                onTouchCancel={onTouchCancel}
+                onTouchEnd={onClearTouch}
+                onTouchCancel={onClearTouch}
                 style={[styles.reanimatedWrapper, animatedStyles]}>
                 {(!isEditing && onRemove) && (
                     <View style={styles.close}>
                         <TouchableOpacity onPressIn={onClose} onPressOut={onReleaseClose}>
                             <Image
                                 source={require('../assets/close.png')}
-                                style={styles.icon}
+                                style={[styles.icon, propsCloseIconStyle]}
                             />
                         </TouchableOpacity>
                     </View>
