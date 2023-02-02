@@ -23,6 +23,7 @@ const DraggableGridView = <T,>(
     onEndDrag: (orderedData: Array<T>, from: number, to: number) => void
     onLongPress: () => void;
     onRemove?: (index: number) => void;
+    notIncludeRemoveIn?: Array<number>;
   }
 ) => {
   const {
@@ -44,6 +45,7 @@ const DraggableGridView = <T,>(
     onEndDrag: onPropsEndDrag,
     onLongPress,
     onRemove,
+    notIncludeRemoveIn
   } = props
 
   const [isScrolling, setIsScrolling] = React.useState(false);
@@ -97,7 +99,7 @@ const DraggableGridView = <T,>(
       onEndDrag={onEndDrag}
       onLongPress={onLongPress}
       isScrolling={isScrolling}
-      onRemove={onRemove}
+      onRemove={notIncludeRemoveIn ? !notIncludeRemoveIn.includes(index) && onRemove : onRemove}
       >
       <>{props.renderItem({ item, index })}</>
     </DraggableItem>
