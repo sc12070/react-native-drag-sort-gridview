@@ -99,25 +99,21 @@ const DraggableItem = ({
     const onTouchStart = useCallback(() => {
         clearTimeout(timerId.current);
         if (isScrolling) return;
-        console.debug('onTouchStart');
         timerId.current = setTimeout(() => {
             onLongPress();
         }, 1000);
     }, [isScrolling, onLongPress])
     const onClearTouch = () => {
-        console.debug('onClearTouch');
         clearTimeout(timerId.current);
     }
     const onReleaseClose = (event: GestureResponderEvent) => {
         event.preventDefault();
         event.stopPropagation();
-        console.debug('onReleaseClose')
         onClearTouch();
     }
     const onClose = (event: GestureResponderEvent) => {
         event.preventDefault();
         event.stopPropagation();
-        console.debug('onClose')
         onClearTouch();
         onRemove(index);
     }

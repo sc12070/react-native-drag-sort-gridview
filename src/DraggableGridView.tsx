@@ -108,11 +108,9 @@ const DraggableGridView = <T,>(
     </DraggableItem>
   )
   const onScrollEndDrag = () => {
-    console.log('onScrollEndDrag');
     setIsScrolling(false);
   }
   const onScrollBeginDrag = () => {
-    console.log('onScrollBeginDrag');
     setIsScrolling(true);
   }
 
