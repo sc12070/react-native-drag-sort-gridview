@@ -19,7 +19,9 @@ const DraggableGridView = <T,>(
     debounce?: number | undefined
     renderItem: ({ item, index }: { item: T; index: number }) => React.ReactElement | null
     keyExtractor: (item: T) => string
-    onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
+    onStartDrag?: (index: number) => void
+    onEndDrag: (orderedData: Array<T>, from: number, to: number) => void
+    onLongPress: () => void;
   }
 ) => {
   const {
@@ -37,8 +39,12 @@ const DraggableGridView = <T,>(
     animMoveDuration,
     debounce,
     keyExtractor,
-    onOrderChanged
+    onStartDrag: onPropsStartDrag,
+    onEndDrag: onPropsEndDrag,
+    onLongPress,
   } = props
+
+  const [isScrolling, setIsScrolling] = React.useState(false);
 
   const {
     isLock,
@@ -61,7 +67,8 @@ const DraggableGridView = <T,>(
     propsItemWidth,
     numColumns,
     debounce,
-    onOrderChanged
+    onEndDrag: onPropsEndDrag,
+    onStartDrag: onPropsStartDrag,
   })
 
   const renderItem = ({ item, index }: { item: T; index: number }) => (
@@ -85,7 +92,10 @@ const DraggableGridView = <T,>(
       unlockTouch={unlockTouch}
       onStartDrag={onStartDrag}
       updateDragToIndex={updateDragToIndex}
-      onEndDrag={onEndDrag}>
+      onEndDrag={onEndDrag}
+      onLongPress={onLongPress}
+      isScrolling={isScrolling}
+      >
       <>{props.renderItem({ item, index })}</>
     </DraggableItem>
   )
@@ -96,7 +106,9 @@ const DraggableGridView = <T,>(
         {...props}
         style={[styles.list, style, { width: listWidth }]}
         contentContainerStyle={[contentContainerStyle, styles.content]}
-        scrollEnabled={isEnableScroll}>
+        scrollEnabled={isEnableScroll}
+        onScrollEndDrag={() => setIsScrolling(false)}
+        onMomentumScrollBegin={() => setIsScrolling(true)}>
         {data.map((item: T, index: number) => renderItem({ item, index }))}
       </ScrollView>
       {isLock === true && <View style={styles.uiBlock} />}

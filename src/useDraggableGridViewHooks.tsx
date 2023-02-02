@@ -9,14 +9,16 @@ export default <T,>({
   propsItemWidth,
   debounce,
   numColumns,
-  onOrderChanged
+  onEndDrag: propsOnEndDrag,
+  onStartDrag: propsOnStartDrag,
 }: {
   data: Array<T>
   debounce?: number | undefined
   propsItemHeight?: number | undefined
   propsItemWidth?: number | undefined
   numColumns: number | undefined
-  onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
+  onEndDrag: (orderedData: Array<T>, from: number, to: number) => void,
+  onStartDrag?: (index: number) => void
 }) => {
   const [isLock, setIsLock] = useState<boolean>(false)
   const [isEnableScroll, setIsEnableScroll] = useState<boolean>(true)
@@ -70,7 +72,8 @@ export default <T,>({
   const onStartDrag = useCallback((index: number) => {
     setIsEnableScroll(false)
     setDragIndex(index)
-  }, [])
+    if (propsOnStartDrag) propsOnStartDrag(index)
+  }, [propsOnStartDrag])
 
   const updateDragToIndex = useCallback(
     (index: number | undefined) => {
@@ -103,9 +106,9 @@ export default <T,>({
           [to, 0, temp]
         ]
       })
-      onOrderChanged(orderedData, from, to)
+      propsOnEndDrag(orderedData, from, to)
     },
-    [data, onOrderChanged]
+    [data, propsOnEndDrag]
   )
 
   return {

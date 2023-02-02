@@ -1,5 +1,5 @@
 import { MOVEMENT } from '../models'
-import React, { memo } from 'react'
+import React, { memo, useCallback, useMemo } from 'react'
 import { Animated, ViewStyle } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import styles from './styles'
@@ -7,6 +7,8 @@ import useDraggableItemHooks from './useDraggableItemHooks'
 import usePanResponderViewHooks from './usePanResponderViewHooks'
 import useReanimHooks from './useReanimHooks'
 
+
+let dispatchLongPress = 0;
 const DraggableItem = ({
   children,
   style,
@@ -27,7 +29,9 @@ const DraggableItem = ({
   unlockTouch,
   onStartDrag,
   updateDragToIndex,
-  onEndDrag
+  onEndDrag,
+  onLongPress,
+  isScrolling
 }: {
   children?: JSX.Element
   itemWidth: number
@@ -49,6 +53,8 @@ const DraggableItem = ({
   onStartDrag: (index: number) => void
   updateDragToIndex: (index: number | undefined) => void
   onEndDrag: (from: number, to: number) => void
+  onLongPress: () => void;
+  isScrolling: boolean;
 }) => {
   const { isDraggingItem } = useDraggableItemHooks({
     animDirection
@@ -83,7 +89,17 @@ const DraggableItem = ({
     onStartDrag,
     updateDragToIndex,
     onEndDrag
-  })
+  });
+
+  const onTouchStart = useCallback(() => {
+    if (isScrolling) return;
+    dispatchLongPress = setTimeout(() => {
+      onLongPress();
+    }, 1000);
+  }, [isScrolling, onLongPress])
+  const onTouchCancel = () => {
+    clearTimeout(dispatchLongPress);
+  }
 
   return (
     <Animated.View
@@ -108,6 +124,8 @@ const DraggableItem = ({
       ]}>
       <Reanimated.View
         {...panResponder.panHandlers}
+        onTouchStart={onTouchStart}
+        onTouchCancel={onTouchCancel}
         style={[styles.reanimatedWrapper, animatedStyles]}>
         {children}
       </Reanimated.View>
