@@ -19,6 +19,7 @@ const DraggableGridView = <T,>(
     renderItem: ({ item, index }: { item: T; index: number }) => React.ReactElement | null
     keyExtractor: (item: T) => string
     onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
+    onMovingStateChanged?: (isMoving: boolean) => void
   }
 ) => {
   const {
@@ -35,7 +36,8 @@ const DraggableGridView = <T,>(
     animMoveDuration,
     debounce,
     keyExtractor,
-    onOrderChanged
+    onOrderChanged,
+    onMovingStateChanged
   } = props
 
   const {
@@ -48,8 +50,8 @@ const DraggableGridView = <T,>(
     itemHeight,
     sectionWidth,
     sectionHeight,
-    lockTouch,
-    unlockTouch,
+    startAnim,
+    endAnim,
     onStartDrag,
     updateDragToIndex,
     onEndDrag
@@ -59,7 +61,9 @@ const DraggableGridView = <T,>(
     propsItemHeight,
     numColumns,
     debounce,
-    onOrderChanged
+    shouldAnimOnRelease,
+    onOrderChanged,
+    onMovingStateChanged
   })
 
   const renderItem = ({ item, index }: { item: T; index: number }) => (
@@ -78,9 +82,9 @@ const DraggableGridView = <T,>(
       isEditing={isEditing}
       shouldVibrate={shouldVibrate}
       shouldAnimOnRelease={shouldAnimOnRelease}
-      animMoveDuration={animMoveDuration || 1000}
-      lockTouch={lockTouch}
-      unlockTouch={unlockTouch}
+      animMoveDuration={animMoveDuration || 500}
+      startAnim={startAnim}
+      endAnim={endAnim}
       onStartDrag={onStartDrag}
       updateDragToIndex={updateDragToIndex}
       onEndDrag={onEndDrag}>

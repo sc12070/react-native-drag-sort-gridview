@@ -1,8 +1,11 @@
 {
   "name": "react-native-drag-sort-gridview",
   "title": "React Native Drag Sort Gridview",
-  "version": "1.2.2",
+  "version": "1.3.0",
   "description": "A draggable and sortable grid view for react native",
+  "files": [
+    "dist"
+  ],
   "main": "dist/commonjs/index",
   "module": "dist/module/index",
   "types": "dist/typescript/index.d.ts",

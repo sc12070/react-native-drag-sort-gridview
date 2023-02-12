@@ -1,11 +1,12 @@
 import { MOVEMENT } from '../models'
-import React, { memo } from 'react'
+import React from 'react'
 import { Animated, ViewStyle } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import styles from './styles'
 import useDraggableItemHooks from './useDraggableItemHooks'
 import usePanResponderViewHooks from './usePanResponderViewHooks'
 import useReanimHooks from './useReanimHooks'
+import useMovementHooks from './useMovementHooks'
 
 const DraggableItem = ({
   children,
@@ -23,8 +24,8 @@ const DraggableItem = ({
   isDragging,
   animDirection,
   animMoveDuration,
-  lockTouch,
-  unlockTouch,
+  startAnim,
+  endAnim,
   onStartDrag,
   updateDragToIndex,
   onEndDrag
@@ -44,8 +45,8 @@ const DraggableItem = ({
   isDragging: boolean
   animDirection: MOVEMENT
   animMoveDuration: number
-  lockTouch: () => void
-  unlockTouch: () => void
+  startAnim: () => void
+  endAnim: () => void
   onStartDrag: (index: number) => void
   updateDragToIndex: (index: number | undefined) => void
   onEndDrag: (from: number, to: number) => void
@@ -55,6 +56,11 @@ const DraggableItem = ({
   })
 
   const { animatedStyles } = useReanimHooks({
+    isEditing,
+    shouldVibrate
+  })
+
+  const { moveXAnim, moveYAnim } = useMovementHooks({
     itemWidth,
     itemHeight,
     numColumns,
@@ -64,7 +70,9 @@ const DraggableItem = ({
     isDraggingItem,
     index,
     animDirection,
-    animMoveDuration
+    animMoveDuration,
+    startAnim,
+    endAnim
   })
 
   const { panResponder, dragXAnim, dragYAnim } = usePanResponderViewHooks({
@@ -78,8 +86,8 @@ const DraggableItem = ({
     isEditing,
     animMoveDuration,
     shouldAnimOnRelease,
-    lockTouch,
-    unlockTouch,
+    startAnim,
+    endAnim,
     onStartDrag,
     updateDragToIndex,
     onEndDrag
@@ -97,10 +105,10 @@ const DraggableItem = ({
         {
           transform: [
             {
-              translateX: dragXAnim
+              translateX: isDraggingItem ? dragXAnim : moveXAnim
             },
             {
-              translateY: dragYAnim
+              translateY: isDraggingItem ? dragYAnim : moveYAnim
             }
           ]
         },
@@ -115,4 +123,4 @@ const DraggableItem = ({
   )
 }
 
-export default memo(DraggableItem)
+export default DraggableItem

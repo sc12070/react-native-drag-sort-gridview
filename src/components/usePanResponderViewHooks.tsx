@@ -12,8 +12,8 @@ export default ({
   isEditing,
   animMoveDuration,
   shouldAnimOnRelease,
-  lockTouch,
-  unlockTouch,
+  startAnim,
+  endAnim,
   onStartDrag,
   updateDragToIndex,
   onEndDrag
@@ -28,13 +28,16 @@ export default ({
   isEditing: boolean
   animMoveDuration: number
   shouldAnimOnRelease: boolean
-  lockTouch: () => void
-  unlockTouch: () => void
+  startAnim: () => void
+  endAnim: () => void
   onStartDrag: (index: number) => void
   updateDragToIndex: (index: number | undefined) => void
   onEndDrag: (from: number, to: number) => void
 }) => {
-  const duration = useMemo(() => animMoveDuration / 3, [animMoveDuration])
+  const durationMultiplier = useMemo(
+    () => animMoveDuration / itemWidth,
+    [itemWidth, animMoveDuration]
+  )
   const row = useMemo(() => index % numColumns, [index, numColumns])
   const column = useMemo(() => Math.floor(index / numColumns), [index, numColumns])
   const normaliseXOffset = useMemo(
@@ -54,10 +57,12 @@ export default ({
   const onPressRelease = useCallback(
     (toIndex: number) => {
       onEndDrag(index, Math.max(0, toIndex))
-      dragXAnimRef.current.setValue(0)
-      dragYAnimRef.current.setValue(0)
+      if (shouldAnimOnRelease === false) {
+        dragXAnimRef.current.setValue(0)
+        dragYAnimRef.current.setValue(0)
+      }
     },
-    [index, onEndDrag]
+    [index, shouldAnimOnRelease, onEndDrag]
   )
 
   const panResponder = useMemo(
@@ -69,6 +74,7 @@ export default ({
         onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => true,
         onPanResponderStart: (_evt, _gestureState) => {
           onStartDrag(index)
+          startAnim()
         },
         onPanResponderMove: (_evt, gestureState) => {
           const { dx, dy } = gestureState
@@ -85,28 +91,33 @@ export default ({
           dragYAnimRef.current.setValue(dy)
         },
         onPanResponderTerminationRequest: (_evt, _gestureState) => false,
-        onPanResponderRelease: (_evt, _gestureState) => {
+        onPanResponderRelease: (_evt, gestureState) => {
           const toIndex = Math.min(Math.max(0, toIndexRef.current), itemLength - 1)
-          if (shouldAnimOnRelease === false) {
-            onPressRelease(toIndex)
-            return
-          }
-          lockTouch()
-          Animated.parallel([
-            Animated.timing(dragXAnimRef.current, {
-              toValue: ((toIndex % 3) - (index % 3)) * itemWidth,
-              duration,
-              useNativeDriver: true
-            }),
-            Animated.timing(dragYAnimRef.current, {
-              toValue: (Math.floor(toIndex / 3) - Math.floor(index / 3)) * itemHeight,
-              duration,
-              useNativeDriver: true
+          onPressRelease(toIndex)
+          if (shouldAnimOnRelease === true) {
+            const { dx, dy } = gestureState
+            const distinationX = ((toIndex % 3) - (index % 3)) * itemWidth
+            const distinationY = (Math.floor(toIndex / 3) - Math.floor(index / 3)) * itemHeight
+            const duration = Math.min(
+              animMoveDuration,
+              Math.sqrt(Math.pow(distinationX - dx, 2) + Math.pow(distinationY - dy, 2)) *
+                durationMultiplier
+            )
+            Animated.parallel([
+              Animated.timing(dragXAnimRef.current, {
+                toValue: distinationX,
+                duration,
+                useNativeDriver: true
+              }),
+              Animated.timing(dragYAnimRef.current, {
+                toValue: distinationY,
+                duration,
+                useNativeDriver: true
+              })
+            ]).start(() => {
+              endAnim()
             })
-          ]).start(() => {
-            onPressRelease(toIndex)
-            unlockTouch()
-          })
+          }
         },
         onPanResponderTerminate: (_evt, _gestureState) => {},
         onShouldBlockNativeResponder: (_evt, _gestureState) => {
@@ -123,10 +134,11 @@ export default ({
       itemWidth,
       itemHeight,
       itemLength,
-      duration,
+      animMoveDuration,
+      durationMultiplier,
       shouldAnimOnRelease,
-      lockTouch,
-      unlockTouch,
+      startAnim,
+      endAnim,
       onPressRelease,
       onStartDrag,
       updateDragToIndex

@@ -9,14 +9,18 @@ export default <T,>({
   listWidth,
   propsItemHeight,
   numColumns,
-  onOrderChanged
+  shouldAnimOnRelease,
+  onOrderChanged,
+  onMovingStateChanged
 }: {
   data: Array<T>
   debounce?: number | undefined
   listWidth: number | undefined
   propsItemHeight?: number | undefined
   numColumns: number | undefined
+  shouldAnimOnRelease: boolean
   onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
+  onMovingStateChanged?: (isMoving: boolean) => void
 }) => {
   const [isLock, setIsLock] = useState<boolean>(false)
   const [isEnableScroll, setIsEnableScroll] = useState<boolean>(true)
@@ -26,11 +30,11 @@ export default <T,>({
   const isDragging = useMemo<boolean>(() => dragIndex !== undefined, [dragIndex])
   const animDirectionArray = useMemo<Array<MOVEMENT>>(() => {
     return new Array(count).fill(0).map((_, index: number) => {
-      if (dragIndex === undefined || dragToIndex === undefined) {
-        return MOVEMENT.restore
-      }
       if (dragIndex === index) {
         return MOVEMENT.dragging
+      }
+      if (dragIndex === undefined || dragToIndex === undefined) {
+        return MOVEMENT.restore
       }
       if (dragToIndex < dragIndex) {
         // drag to prev
@@ -53,8 +57,6 @@ export default <T,>({
     })
   }, [count, dragIndex, dragToIndex])
 
-  const timerRef = useRef<number | undefined>()
-
   const itemWidth = useMemo(
     () => (listWidth || Dimensions.get('screen').width) / (numColumns || 1),
     [listWidth, numColumns]
@@ -63,32 +65,12 @@ export default <T,>({
   const sectionWidth = useMemo(() => itemWidth / 2, [itemWidth])
   const sectionHeight = useMemo(() => itemHeight / 2, [itemHeight])
 
-  const lockTouch = useCallback(() => setIsLock(true), [])
+  const debounceTimerRef = useRef<number | undefined>()
+  const animatingCount = useRef<number>(0)
+  const pendingFrom = useRef<number | undefined>()
+  const pendingTo = useRef<number | undefined>()
 
-  const unlockTouch = useCallback(() => setIsLock(false), [])
-
-  const onStartDrag = useCallback((index: number) => {
-    setIsEnableScroll(false)
-    setDragIndex(index)
-  }, [])
-
-  const updateDragToIndex = useCallback(
-    (index: number | undefined) => {
-      if (debounce === undefined) {
-        setDragToIndex(index)
-        return
-      }
-      if (timerRef.current !== undefined) {
-        clearTimeout(timerRef.current)
-      }
-      timerRef.current = setTimeout(() => {
-        setDragToIndex(index)
-      }, debounce)
-    },
-    [debounce]
-  )
-
-  const onEndDrag = useCallback(
+  const changeOrder = useCallback(
     (from: number, to: number) => {
       setIsEnableScroll(true)
       setDragIndex(undefined)
@@ -108,6 +90,67 @@ export default <T,>({
     [data, onOrderChanged]
   )
 
+  const startAnim = useCallback(() => {
+    if (shouldAnimOnRelease === false) {
+      return
+    }
+    if (animatingCount.current === 0) {
+      setIsLock(true)
+      onMovingStateChanged && onMovingStateChanged(true)
+    }
+    animatingCount.current += 1
+  }, [shouldAnimOnRelease, onMovingStateChanged])
+
+  const endAnim = useCallback(() => {
+    if (shouldAnimOnRelease === false) {
+      return
+    }
+    animatingCount.current -= 1
+    if (animatingCount.current === 0) {
+      setIsLock(false)
+      onMovingStateChanged && onMovingStateChanged(false)
+      if (pendingFrom.current !== undefined && pendingTo.current !== undefined) {
+        changeOrder(pendingFrom.current, pendingTo.current)
+        pendingFrom.current = undefined
+        pendingTo.current = undefined
+      }
+    }
+  }, [shouldAnimOnRelease, changeOrder, onMovingStateChanged])
+
+  const onStartDrag = useCallback((index: number) => {
+    setIsEnableScroll(false)
+    setDragIndex(index)
+  }, [])
+
+  const updateDragToIndex = useCallback(
+    (index: number | undefined) => {
+      if (debounce === undefined) {
+        setDragToIndex(index)
+        return
+      }
+      if (debounceTimerRef.current !== undefined) {
+        clearTimeout(debounceTimerRef.current)
+      }
+      debounceTimerRef.current = setTimeout(() => {
+        setDragToIndex(index)
+      }, debounce)
+    },
+    [debounce]
+  )
+
+  const onEndDrag = useCallback(
+    (from: number, to: number) => {
+      if (shouldAnimOnRelease === true && animatingCount.current > 0) {
+        pendingFrom.current = from
+        pendingTo.current = to
+        return
+      } else {
+        changeOrder(from, to)
+      }
+    },
+    [shouldAnimOnRelease, changeOrder]
+  )
+
   return {
     isLock,
     isDragging,
@@ -118,8 +161,8 @@ export default <T,>({
     itemHeight,
     sectionWidth,
     sectionHeight,
-    lockTouch,
-    unlockTouch,
+    startAnim,
+    endAnim,
     onStartDrag,
     updateDragToIndex,
     onEndDrag

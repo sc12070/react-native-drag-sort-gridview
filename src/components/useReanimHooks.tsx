@@ -1,4 +1,3 @@
-import { MOVEMENT } from '../models'
 import { useCallback, useEffect } from 'react'
 import {
   Easing,
@@ -9,56 +8,13 @@ import {
   withTiming
 } from 'react-native-reanimated'
 
-export default ({
-  itemWidth,
-  itemHeight,
-  numColumns,
-  isEditing,
-  shouldVibrate,
-  isDragging,
-  isDraggingItem,
-  index,
-  animDirection,
-  animMoveDuration
-}: {
-  itemWidth: number
-  itemHeight: number
-  numColumns: number
-  isEditing: boolean
-  shouldVibrate: boolean
-  isDragging: boolean
-  isDraggingItem: boolean
-  index: number
-  animDirection: MOVEMENT
-  animMoveDuration: number
-}) => {
-  const movementOffset = useSharedValue({ x: 0, y: 0 })
+export default ({ isEditing, shouldVibrate }: { isEditing: boolean; shouldVibrate: boolean }) => {
   const rotationOffset = useSharedValue(0)
 
   const animatedStyles = useAnimatedStyle(() => {
     'worklet'
     return {
-      transform: [
-        {
-          translateX:
-            !isDragging || isDraggingItem
-              ? movementOffset.value.x
-              : withTiming(movementOffset.value.x, {
-                  duration: animMoveDuration,
-                  easing: Easing.out(Easing.exp)
-                })
-        },
-        {
-          translateY:
-            !isDragging || isDraggingItem
-              ? movementOffset.value.y
-              : withTiming(movementOffset.value.y, {
-                  duration: animMoveDuration,
-                  easing: Easing.out(Easing.exp)
-                })
-        },
-        { rotateZ: `${rotationOffset.value}deg` }
-      ]
+      transform: [{ rotateZ: `${rotationOffset.value}deg` }]
     }
   })
 
@@ -76,41 +32,6 @@ export default ({
     rotationOffset.value = 0
   }, [rotationOffset])
 
-  const restore = useCallback(() => {
-    movementOffset.value = {
-      x: 0,
-      y: 0
-    }
-  }, [movementOffset])
-
-  const movePrev = useCallback(() => {
-    if (index % numColumns === 0) {
-      movementOffset.value = {
-        x: itemWidth * (numColumns - 1),
-        y: -itemHeight
-      }
-    } else {
-      movementOffset.value = {
-        x: -itemWidth,
-        y: 0
-      }
-    }
-  }, [index, itemWidth, itemHeight, numColumns, movementOffset])
-
-  const moveNext = useCallback(() => {
-    if (index % numColumns === numColumns - 1) {
-      movementOffset.value = {
-        x: -itemWidth * (numColumns - 1),
-        y: itemHeight
-      }
-    } else {
-      movementOffset.value = {
-        x: itemWidth,
-        y: 0
-      }
-    }
-  }, [index, itemWidth, itemHeight, numColumns, movementOffset])
-
   useEffect(() => {
     if (shouldVibrate === false) {
       return
@@ -122,25 +43,7 @@ export default ({
     }
   }, [isEditing, shouldVibrate, startRotate, stopRotate])
 
-  useEffect(() => {
-    if (isDraggingItem || !isEditing) {
-      return
-    }
-    switch (animDirection) {
-      case MOVEMENT.restore:
-        restore()
-        break
-      case MOVEMENT.next:
-        moveNext()
-        break
-      case MOVEMENT.prev:
-        movePrev()
-        break
-    }
-  }, [isDraggingItem, isEditing, animDirection, moveNext, movePrev, restore])
-
   return {
-    movementOffset,
     animatedStyles
   }
 }
