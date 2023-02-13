@@ -58,7 +58,7 @@ export default <T,>({
   }, [count, dragIndex, dragToIndex])
 
   const itemWidth = useMemo(
-    () => (listWidth || Dimensions.get('screen').width) / (numColumns || 1),
+    () => Math.floor(listWidth || Dimensions.get('screen').width) / (numColumns || 1),
     [listWidth, numColumns]
   )
   const itemHeight = useMemo(() => propsItemHeight || itemWidth, [propsItemHeight, itemWidth])
