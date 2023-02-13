@@ -27,12 +27,12 @@ const HomePage = () => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={toDefinedSizeScene}>
-          <Text style={styles.text}>Defined size example</Text>
-          <Text style={styles.description}>Defined size grid view.</Text>
+          <Text style={styles.text}>Defined list size example</Text>
+          <Text style={styles.description}>Defined size of list.</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={toFixedItemWidthScene}>
           <Text style={styles.text}>Fixed item width example</Text>
-          <Text style={styles.description}>Gird view with fixed item width.</Text>
+          <Text style={styles.description}>Gird view with fixed item width(80).</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={toDynamicItemWidthScene}>
           <Text style={styles.text}>Dynamic item width example</Text>
