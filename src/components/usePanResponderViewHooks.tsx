@@ -96,8 +96,9 @@ export default ({
           onPressRelease(toIndex)
           if (shouldAnimOnRelease === true) {
             const { dx, dy } = gestureState
-            const distinationX = ((toIndex % 3) - (index % 3)) * itemWidth
-            const distinationY = (Math.floor(toIndex / 3) - Math.floor(index / 3)) * itemHeight
+            const distinationX = ((toIndex % numColumns) - (index % numColumns)) * itemWidth
+            const distinationY =
+              (Math.floor(toIndex / numColumns) - Math.floor(index / numColumns)) * itemHeight
             const duration = Math.min(
               animMoveDuration,
               Math.sqrt(Math.pow(distinationX - dx, 2) + Math.pow(distinationY - dy, 2)) *
