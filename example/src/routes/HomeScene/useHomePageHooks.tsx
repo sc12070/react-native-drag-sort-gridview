@@ -9,12 +9,27 @@ export default () => {
     navigation.navigate('Simplest')
   }, [navigation])
 
+  const toUsageScene = useCallback(() => {
+    navigation.navigate('Usage')
+  }, [navigation])
+
   const toDefinedSizeScene = useCallback(() => {
     navigation.navigate('Defined Size')
   }, [navigation])
 
+  const toFixedItemWidthScene = useCallback(() => {
+    navigation.navigate('Fixed item width')
+  }, [navigation])
+
+  const toDynamicItemWidthScene = useCallback(() => {
+    navigation.navigate('Dynamic item width')
+  }, [navigation])
+
   return {
     toSimplestScene,
-    toDefinedSizeScene
+    toUsageScene,
+    toDefinedSizeScene,
+    toFixedItemWidthScene,
+    toDynamicItemWidthScene
   }
 }
