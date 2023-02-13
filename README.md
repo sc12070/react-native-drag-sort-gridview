@@ -1,9 +1,9 @@
 # react-native-drag-sort-gridview
 
-Version 1.3.0 and `shouldAnimOnRelease={true}`\
-Added animation to dragging object after released tap\
+Version > 1.3.0 and `shouldAnimOnRelease={true}`\
+Implemented animation to dragging object after released tap\
 ![](./__doc__/demo_1_3_0.gif)\
-Vertion 1.2.2 or `shouldAnimOnRelease={false}`\
+`shouldAnimOnRelease={false}`\
 ![](./__doc__/demo_1_2_2.gif)
 
 ## Getting started
@@ -23,7 +23,7 @@ yarn add react-native-drag-sort-gridview react-addons-update
 
 ## Examples
 
-[Examples readme](./example/README.md)
+[Examples readme](./example)
 
 ## Usage
 
@@ -101,4 +101,4 @@ Accept all props in [ScrollView](https://reactnative.dev/docs/scrollview)
 | shouldVibrate        | boolean   |          | Default `true`. This determine should the items vibrate while editing.                                                                                                                                                                                                                                                                                 |
 | shouldAnimOnRelease  | boolean   |          | Default `false`. This determine should the dragging item be animated after user released press. **Touch would be blocked until all animations end**.                                                                                                                                                                                                   |
 | onMovingStateChanged | function  |          | this callback would be called only when shouldAnimOnRelease is `true`. `(isMoving: boolean)` would be returned. Since the touch of list would be blocked until all animations end, this can be used to indicate whether touch is blocked or not.                                                                                                       |
-| itemContainerStyle   | ViewStyle |          | Style of item wrapper.                                                                                                                                                                                                                                                                                                                                 |
+| itemContainerStyle   | ViewStyle |          | Style of item wrapper. User may scroll the list on space created by padding during editing. E.g. `itemContainerStyle={{ padding: 10 }}` in usage example.                                                                                                                                                                                              |
