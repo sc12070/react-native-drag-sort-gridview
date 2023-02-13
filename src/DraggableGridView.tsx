@@ -17,7 +17,7 @@ const DraggableGridView = <T,>(
     numColumns: number
     debounce?: number | undefined
     renderItem: ({ item, index }: { item: T; index: number }) => React.ReactElement | null
-    keyExtractor: (item: T) => string
+    keyExtractor: (item: T, index: number) => string
     onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
     onMovingStateChanged?: (isMoving: boolean) => void
   }
@@ -68,7 +68,7 @@ const DraggableGridView = <T,>(
 
   const renderItem = ({ item, index }: { item: T; index: number }) => (
     <DraggableItem
-      key={keyExtractor(item)}
+      key={keyExtractor(item, index)}
       style={itemContainerStyle}
       itemWidth={itemWidth}
       itemHeight={itemHeight}
