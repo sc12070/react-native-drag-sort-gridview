@@ -7,30 +7,39 @@ import styles from './styles'
 import useDynamicItemWidthPageHooks from './useDynamicItemWidthPageHooks'
 
 const DynamicItemWidthPage = () => {
-  const { data, noColums, itemWidth, itemHeight, minusItemWidth, plusItemWidth, onOrderChanged } =
-    useDynamicItemWidthPageHooks()
+  const {
+    data,
+    noColums,
+    componentSize,
+    itemSize,
+    paddingVertical,
+    paddingHorizontal,
+    plusWidth,
+    minusWidth,
+    onOrderChanged
+  } = useDynamicItemWidthPageHooks()
 
   const renderItem = ({ item }: { item: IItem }) => {
-    return <Item item={item} itemWidth={itemWidth} />
+    return <Item item={item} componentSize={componentSize} />
   }
 
   return (
     <View style={styles.bg}>
       <View style={styles.btnWrapper}>
-        <TouchableOpacity onPress={minusItemWidth}>
+        <TouchableOpacity onPress={minusWidth}>
           <Text style={styles.text}>-</Text>
         </TouchableOpacity>
-        <Text style={styles.text}>{itemWidth}</Text>
-        <TouchableOpacity onPress={plusItemWidth}>
+        <Text style={styles.text}>{componentSize}</Text>
+        <TouchableOpacity onPress={plusWidth}>
           <Text style={styles.text}>+</Text>
         </TouchableOpacity>
       </View>
       <DraggableGridView
         contentContainerStyle={styles.contentContainer}
-        itemContainerStyle={styles.itemContainer}
+        itemContainerStyle={{ paddingVertical, paddingHorizontal }}
         isEditing={true}
         numColumns={noColums}
-        itemHeight={itemHeight}
+        itemHeight={itemSize}
         data={data}
         shouldAnimOnRelease={true}
         keyExtractor={({ id }) => `${id}`}

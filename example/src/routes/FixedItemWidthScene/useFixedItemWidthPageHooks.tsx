@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
-import { itemWidth } from './constants'
+import { componentWidth } from './constants'
 import { IItem } from './modal'
 
 export default () => {
@@ -16,9 +16,14 @@ export default () => {
     { id: 8, color: '#555555' }
   ])
 
-  const noColums = useMemo(() => Math.floor(Dimensions.get('window').width / itemWidth), [])
+  const itemWidth = useMemo(() => componentWidth + 20, []) // 20 stand for 10 top & 10 bottom padding from styles.itemContainer
 
-  const itemHeight = useMemo(() => itemWidth + 20, []) // 20 stand for 10 top & 10 bottom padding from styles.itemContainer
+  const noColums = useMemo(
+    () => Math.floor(Dimensions.get('window').width / itemWidth),
+    [itemWidth]
+  )
+
+  const itemHeight = useMemo(() => itemWidth, [itemWidth])
 
   const onOrderChanged = useCallback((orderedData: Array<IItem>) => setData(orderedData), [])
 

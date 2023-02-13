@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   itemContainer: {
-    padding: 10
+    padding: 10 // minimunPadding / 2
   }
 })
 

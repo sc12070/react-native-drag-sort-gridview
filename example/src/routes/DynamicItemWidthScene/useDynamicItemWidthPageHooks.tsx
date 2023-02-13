@@ -2,6 +2,10 @@ import { useCallback, useMemo, useState } from 'react'
 import { Dimensions } from 'react-native'
 import { IItem } from './modal'
 
+const screenWidth = Dimensions.get('window').width
+
+const minimunPadding = 20
+
 export default () => {
   const [data, setData] = useState<Array<IItem>>([
     { id: 0, color: '#FF0000' },
@@ -15,28 +19,37 @@ export default () => {
     { id: 8, color: '#555555' }
   ])
 
-  const [itemWidth, setItemWidth] = useState<number>(100)
+  const [componentSize, setComponentSize] = useState<number>(80)
 
-  const noColums = useMemo(
-    () => Math.floor(Dimensions.get('window').width / itemWidth),
-    [itemWidth]
+  const itemSize = useMemo(() => componentSize + minimunPadding, [componentSize])
+
+  const noColums = useMemo(() => Math.floor(screenWidth / itemSize), [itemSize])
+
+  /*
+   * user may scroll the list on space created by padding during editing
+   */
+  const paddingVertical = useMemo(() => minimunPadding / 2, [])
+
+  const paddingHorizontal = useMemo(
+    () => Math.floor((screenWidth / noColums - componentSize) / 2),
+    [componentSize, noColums]
   )
 
-  const itemHeight = useMemo(() => itemWidth + 20, [itemWidth]) // 20 stand for 10 top & 10 bottom padding from styles.itemContainer
+  const plusWidth = useCallback(() => setComponentSize(componentSize + 10), [componentSize])
 
-  const plusItemWidth = useCallback(() => setItemWidth(itemWidth + 10), [itemWidth])
-
-  const minusItemWidth = useCallback(() => setItemWidth(itemWidth - 10), [itemWidth])
+  const minusWidth = useCallback(() => setComponentSize(componentSize - 10), [componentSize])
 
   const onOrderChanged = useCallback((orderedData: Array<IItem>) => setData(orderedData), [])
 
   return {
     data,
     noColums,
-    itemWidth,
-    itemHeight,
-    plusItemWidth,
-    minusItemWidth,
+    componentSize,
+    itemSize,
+    paddingVertical,
+    paddingHorizontal,
+    plusWidth,
+    minusWidth,
     onOrderChanged
   }
 }

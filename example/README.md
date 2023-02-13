@@ -29,7 +29,7 @@
 
 ## Fixed item width example
 
-### Gird view with fixed item width(80) on difference devices.
+### Gird view with fixed item width (65) and fixed padding (10) on difference devices.
 
 [./example/src/routes/FixedItemWidthScene](./src/routes/FixedItemWidthScene)\
 ![](./__doc__/fixedItemIPhonePro.jpg)
@@ -37,7 +37,7 @@
 
 ## Dynamic item width example
 
-### Gird view with dynamic item width(init 100).
+### Gird view with dynamic item width (init 80), dynamic horrizontal padding (min 10) and fixed vertical padding (10).
 
 [./example/src/routes/DynamicItemWidthScene](./src/routes/DynamicItemWidthScene)\
 ![](./__doc__/dynamicItemWidth.gif)

@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native'
-import { itemWidth } from '../constants'
+import { componentWidth } from '../constants'
 
 const styles = StyleSheet.create({
   item: {
-    width: itemWidth,
-    height: itemWidth
+    width: componentWidth,
+    height: componentWidth
   }
 })
 

@@ -25,6 +25,7 @@ const FixedItemWidthPage = () => {
       keyExtractor={({ id }) => `${id}`}
       onOrderChanged={onOrderChanged}
       renderItem={renderItem}
+      shouldVibrate={false}
     />
   )
 }
