@@ -35,6 +35,7 @@ const DynamicItemWidthPage = () => {
         </TouchableOpacity>
       </View>
       <DraggableGridView
+        style={styles.gridView}
         contentContainerStyle={styles.contentContainer}
         itemContainerStyle={{ paddingVertical, paddingHorizontal }}
         isEditing={true}

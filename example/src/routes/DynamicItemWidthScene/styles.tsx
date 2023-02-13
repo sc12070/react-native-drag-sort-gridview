@@ -3,7 +3,6 @@ import COLORS from 'constants/COLORS'
 
 const styles = StyleSheet.create({
   bg: {
-    overflow: 'visible',
     backgroundColor: COLORS.bg,
     paddingBottom: 80
   },
@@ -17,8 +16,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     fontSize: 30
   },
+  gridView: {
+    overflow: 'hidden'
+  },
   contentContainer: {
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    overflow: 'hidden'
   },
   itemContainer: {
     padding: 10 // minimunPadding / 2
