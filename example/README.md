@@ -1,6 +1,6 @@
 # react-native-drag-sort-gridview Example
 
-Still adding...
+Still adding...\
 ![](./__doc__/home.jpg)
 
 Simplest implemetation\
