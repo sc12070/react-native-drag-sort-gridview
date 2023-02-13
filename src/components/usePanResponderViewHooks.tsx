@@ -73,6 +73,8 @@ export default ({
         onMoveShouldSetPanResponder: (_evt, _gestureState) => true,
         onMoveShouldSetPanResponderCapture: (_evt, _gestureState) => true,
         onPanResponderStart: (_evt, _gestureState) => {
+          dragXAnimRef.current.setValue(0)
+          dragYAnimRef.current.setValue(0)
           onStartDrag(index)
           startAnim()
         },
