@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     justifyContent: 'flex-start',
-    paddingTop: 60
+    paddingTop: 70
   },
   itemContainer: {
     padding: 10

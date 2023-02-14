@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import update from 'react-addons-update'
 import { IItem } from './modal'
 
 export default () => {
@@ -26,6 +27,14 @@ export default () => {
     setSlectedItem(item)
   }, [])
 
+  const onDelPress = useCallback(
+    (index: number) => {
+      const newData = update(data, { $splice: [[index, 1]] })
+      setData(newData)
+    },
+    [data]
+  )
+
   const onOrderChanged = useCallback((orderedData: Array<IItem>) => setData(orderedData), [])
 
   return {
@@ -35,6 +44,7 @@ export default () => {
     startEdit,
     stopEdit,
     onItemPress,
+    onDelPress,
     onOrderChanged
   }
 }

@@ -32,7 +32,7 @@ const HomePage = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={toFixedItemWidthScene}>
           <Text style={styles.text}>Fixed item width example</Text>
-          <Text style={styles.description}>Gird view with fixed item width(80).</Text>
+          <Text style={styles.description}>Gird view with fixed item width (65).</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={toDynamicItemWidthScene}>
           <Text style={styles.text}>Dynamic item width example</Text>

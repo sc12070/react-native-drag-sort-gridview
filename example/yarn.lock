@@ -5870,9 +5870,9 @@ react-native-codegen@^0.71.3:
     nullthrows "^1.1.1"
 
 react-native-drag-sort-gridview@^1.3.0:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/react-native-drag-sort-gridview/-/react-native-drag-sort-gridview-1.3.4.tgz#841b980b5d732de4327e10ed9f65568819d52a6a"
-  integrity sha512-Elvg/0fLCHWqfjuPpGnamoldGogIBg5CNA3SIjAUElp5CKZcTq462LiedHpMfRJ3XuodYpTsG6UCFkPRvHtVyw==
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/react-native-drag-sort-gridview/-/react-native-drag-sort-gridview-1.3.5.tgz#6def5681ad942dcfced827a2ed9e78918d2b643a"
+  integrity sha512-dxLbn/tqR1DDaiF3tYX5M2ZJ4Dnip+MEYbNqcV2Y1Lpp7NGbK9KCqZjBAs6VRS12PO7sQs+mf13L2d5Pg27suQ==
 
 react-native-gradle-plugin@^0.71.14:
   version "0.71.14"

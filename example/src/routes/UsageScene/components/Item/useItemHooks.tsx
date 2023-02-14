@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { IItem } from '../modal'
+import { IItem } from '../../modal'
 
 export default ({
   item,

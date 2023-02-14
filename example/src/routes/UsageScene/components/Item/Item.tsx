@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { TouchableOpacity, View } from 'react-native'
-import { IItem } from '../modal'
+import { IItem } from '../../modal'
 import styles from './styles'
 import useItemHooks from './useItemHooks'
 
