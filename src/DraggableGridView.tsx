@@ -17,6 +17,7 @@ const DraggableGridView = <T,>(
     numColumns: number
     debounce?: number | undefined
     renderItem: ({ item, index }: { item: T; index: number }) => React.ReactElement | null
+    renderOnEditOverlay?: ({ index }: { index: number }) => React.ReactElement | null
     keyExtractor: (item: T, index: number) => string
     onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
     onMovingStateChanged?: (isMoving: boolean) => void
@@ -35,6 +36,8 @@ const DraggableGridView = <T,>(
     numColumns,
     animMoveDuration,
     debounce,
+    renderItem: propsRenderItem,
+    renderOnEditOverlay,
     keyExtractor,
     onOrderChanged,
     onMovingStateChanged
@@ -83,12 +86,13 @@ const DraggableGridView = <T,>(
       shouldVibrate={shouldVibrate}
       shouldAnimOnRelease={shouldAnimOnRelease}
       animMoveDuration={animMoveDuration || 500}
+      renderOnEditOverlay={renderOnEditOverlay}
       startAnim={startAnim}
       endAnim={endAnim}
       onStartDrag={onStartDrag}
       updateDragToIndex={updateDragToIndex}
       onEndDrag={onEndDrag}>
-      <>{props.renderItem({ item, index })}</>
+      <>{propsRenderItem({ item, index })}</>
     </DraggableItem>
   )
 

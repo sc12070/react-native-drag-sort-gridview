@@ -24,6 +24,7 @@ const DraggableItem = ({
   isDragging,
   animDirection,
   animMoveDuration,
+  renderOnEditOverlay,
   startAnim,
   endAnim,
   onStartDrag,
@@ -45,6 +46,7 @@ const DraggableItem = ({
   isDragging: boolean
   animDirection: MOVEMENT
   animMoveDuration: number
+  renderOnEditOverlay?: ({ index }: { index: number }) => React.ReactElement | null
   startAnim: () => void
   endAnim: () => void
   onStartDrag: (index: number) => void
@@ -119,6 +121,7 @@ const DraggableItem = ({
         style={[styles.reanimatedWrapper, animatedStyles]}>
         {children}
       </Reanimated.View>
+      {isEditing && renderOnEditOverlay && renderOnEditOverlay({ index })}
     </Animated.View>
   )
 }
