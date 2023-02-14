@@ -1,10 +1,9 @@
 # react-native-drag-sort-gridview
 
-Version > 1.3.0 and `shouldAnimOnRelease={true}`\
-Implemented animation to dragging object after released tap\
-![](./__doc__/demo_1_3_0.gif)\
-`shouldAnimOnRelease={false}`\
-![](./__doc__/demo_1_2_2.gif)
+![](./example/__doc__/simplest.gif)
+![](./example/__doc__/usage.gif)
+![](./example/__doc__/definedSize.gif)
+![](./example/__doc__/dynamicItemWidth.gif)
 
 ## Getting started
 
@@ -21,21 +20,25 @@ or
 yarn add react-native-drag-sort-gridview react-addons-update
 ```
 
-## Examples
+## Example
 
-[Examples readme](./example)
+[Examples](./example)
 
-## Usage
+## Simple Usage
 
 ```ts
-import React, { useState } from 'react'
-import { View } from 'react-native'
+import React, { memo, useCallback, useState } from 'react'
+import { StyleSheet, View } from 'react-native'
 import DraggableGridView from 'react-native-drag-sort-gridview'
 
 interface IItem {
   id: number
   color: string
 }
+
+const Item = memo(({ item }: { item: IItem }) => (
+  <View style={[styles.item, { backgroundColor: item.color }]} />
+))
 
 const Example = () => {
   const [data, setData] = useState<Array<IItem>>([
@@ -50,37 +53,54 @@ const Example = () => {
     { id: 8, color: '#555555' }
   ])
 
+  const onOrderChanged = useCallback((orderedData: Array<IItem>) => setData(orderedData), [])
+
+  const renderItem = ({ item }: { item: IItem }) => <Item item={item} />
+
+  const keyExtractor = ({ id }: IItem) => `gridview-${id}`
+
   return (
     <DraggableGridView
-      style={{
-        overflow: 'visible',
-        backgroundColor: '#222222',
-        paddingVertical: 80
-      }}
-      contentContainerStyle={{
-        justifyContent: 'flex-start'
-      }}
-      itemContainerStyle={{
-        padding: 10
-      }}
+      style={styles.bg}
+      contentContainerStyle={styles.contentContainer}
+      itemContainerStyle={styles.itemContainer}
       isEditing={true}
       numColumns={3}
       itemHeight={100}
       data={data}
       shouldAnimOnRelease={true}
-      keyExtractor={({ id }) => `${id}`}
-      onOrderChanged={orderedData => {
-        setData(orderedData)
-      }}
-      renderItem={({ item }) => {
-        return <View style={{ width: '100%', height: 80, backgroundColor: item.color }}></View>
-      }}
+      keyExtractor={keyExtractor}
+      onOrderChanged={onOrderChanged}
+      renderItem={renderItem}
     />
   )
 }
 
+const styles = StyleSheet.create({
+  bg: {
+    overflow: 'visible',
+    backgroundColor: '#222222',
+    paddingVertical: 80
+  },
+  contentContainer: {
+    justifyContent: 'flex-start'
+  },
+  itemContainer: {
+    padding: 10
+  },
+  item: {
+    width: '100%',
+    height: 80
+  }
+})
+
 export default Example
 ```
+
+Version >= 1.3.0 & `shouldAnimOnRelease={true}`\
+![](./__doc__/demo_1_3_0.gif)\
+`shouldAnimOnRelease={false}`\
+![](./__doc__/demo_1_2_2.gif)
 
 ## Props
 
