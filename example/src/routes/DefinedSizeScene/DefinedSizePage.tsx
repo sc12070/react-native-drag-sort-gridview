@@ -32,6 +32,8 @@ const DefinedSizePage = () => {
           onOrderChanged={onOrderChanged}
           renderItem={renderItem}
           listWidth={listWidth}
+          shouldVibrate={false}
+          scrollThreshold={0.2}
         />
       </View>
     </SafeAreaView>

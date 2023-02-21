@@ -15,14 +15,14 @@
 
 ## Usage example
 
-### Press to select item when isEditing is false. Long press item to enable editing.
+### Press to select item when isEditing is false. Long press item to enable editing. Delete items during editing.
 
 [./example/src/routes/UsageScene](./src/routes/UsageScene)\
 ![](./__doc__/usage.gif)
 
 ## Defined list size example
 
-### Defined size of list.
+### Defined size of list. Editing without vibration. Scroll while holding the item.
 
 [./example/src/routes/DefinedSizeScene](./src/routes/DefinedSizeScene)\
 ![](./__doc__/definedSize.gif)

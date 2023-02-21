@@ -23,12 +23,15 @@ const HomePage = () => {
         <TouchableOpacity style={styles.btn} onPress={toUsageScene}>
           <Text style={styles.text}>Usage example</Text>
           <Text style={styles.description}>
-            Press to select item when isEditing is false. Long press item to enable editing.
+            Press to select item when isEditing is false. Long press item to enable editing. Delete
+            items during editing.
           </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={toDefinedSizeScene}>
           <Text style={styles.text}>Defined list size example</Text>
-          <Text style={styles.description}>Defined size of list.</Text>
+          <Text style={styles.description}>
+            Defined size of list. Editing without vibration. Scroll while holding the item.
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.btn} onPress={toFixedItemWidthScene}>
           <Text style={styles.text}>Fixed item width example</Text>
