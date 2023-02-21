@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useRef } from 'react'
-import { Animated, PanResponder } from 'react-native'
+import { MutableRefObject, RefObject, useCallback, useMemo, useRef } from 'react'
+import { Animated, LayoutRectangle, PanResponder, ScrollView } from 'react-native'
 
 export default ({
   itemWidth,
@@ -11,7 +11,12 @@ export default ({
   itemLength,
   isEditing,
   animMoveDuration,
+  scrollThreshold,
   shouldAnimOnRelease,
+  listRef,
+  listLayoutRef,
+  listContentHeightRef,
+  listOffsetYRef,
   startAnim,
   endAnim,
   onStartDrag,
@@ -27,7 +32,12 @@ export default ({
   itemLength: number
   isEditing: boolean
   animMoveDuration: number
+  scrollThreshold?: number | undefined
   shouldAnimOnRelease: boolean
+  listRef: RefObject<ScrollView>
+  listLayoutRef: MutableRefObject<LayoutRectangle | undefined>
+  listContentHeightRef: MutableRefObject<number | undefined>
+  listOffsetYRef: MutableRefObject<number | undefined>
   startAnim: () => void
   endAnim: () => void
   onStartDrag: (index: number) => void
@@ -54,6 +64,10 @@ export default ({
   const dragYAnimRef = useRef(new Animated.Value(0))
   const toIndexRef = useRef<number>(index)
 
+  // scroll
+  const listInitOffsetY = useRef<number>(0)
+  const currentOffsetY = useRef<number>(0)
+
   const onPressRelease = useCallback(
     (toIndex: number) => {
       onEndDrag(index, Math.max(0, toIndex))
@@ -75,14 +89,50 @@ export default ({
         onPanResponderStart: (_evt, _gestureState) => {
           dragXAnimRef.current.setValue(0)
           dragYAnimRef.current.setValue(0)
+          currentOffsetY.current = 0
+          listInitOffsetY.current = listOffsetYRef.current || 0
           onStartDrag(index)
           startAnim()
         },
         onPanResponderMove: (_evt, gestureState) => {
-          const { dx, dy } = gestureState
+          const { dx, dy, moveY } = gestureState
+
+          if (scrollThreshold && scrollThreshold > 0) {
+            const listHeight = listLayoutRef.current?.height || 0
+            const listThresdshold = listHeight * 0.2
+            const listUpperThresdshold = (listLayoutRef.current?.y || 0) + listThresdshold
+            const listLowerThresdshold =
+              (listLayoutRef.current?.y || 0) + listHeight - listThresdshold
+
+            if (moveY > listLowerThresdshold) {
+              currentOffsetY.current = Math.min(
+                currentOffsetY.current + 10,
+                (listContentHeightRef.current || 0) -
+                  (listLayoutRef.current?.height || 0) -
+                  listInitOffsetY.current
+              )
+              const yOffset = listInitOffsetY.current + currentOffsetY.current
+              listRef.current?.scrollTo({
+                y: yOffset,
+                animated: false
+              })
+            } else if (moveY < listUpperThresdshold) {
+              currentOffsetY.current = Math.max(
+                currentOffsetY.current - 10,
+                -listInitOffsetY.current
+              )
+              const yOffset = listInitOffsetY.current + currentOffsetY.current
+              listRef.current?.scrollTo({
+                y: yOffset,
+                animated: false
+              })
+            }
+          }
 
           const sectionX = Math.floor((normaliseXOffset + dx) / sectionWidth / 2)
-          const sectionY = Math.floor((normaliseYOffset + dy) / sectionHeight / 2)
+          const sectionY = Math.floor(
+            (normaliseYOffset + dy + currentOffsetY.current) / sectionHeight / 2
+          )
           const newToIndex = sectionY * numColumns + sectionX
           if (newToIndex !== toIndexRef.current) {
             toIndexRef.current = newToIndex
@@ -90,7 +140,7 @@ export default ({
           }
 
           dragXAnimRef.current.setValue(dx)
-          dragYAnimRef.current.setValue(dy)
+          dragYAnimRef.current.setValue(dy + currentOffsetY.current)
         },
         onPanResponderTerminationRequest: (_evt, _gestureState) => false,
         onPanResponderRelease: (_evt, gestureState) => {
@@ -138,8 +188,13 @@ export default ({
       itemHeight,
       itemLength,
       animMoveDuration,
-      durationMultiplier,
+      scrollThreshold,
       shouldAnimOnRelease,
+      listContentHeightRef,
+      listLayoutRef,
+      listOffsetYRef,
+      listRef,
+      durationMultiplier,
       startAnim,
       endAnim,
       onPressRelease,

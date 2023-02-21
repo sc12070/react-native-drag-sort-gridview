@@ -1,6 +1,6 @@
 import { MOVEMENT } from '../models'
-import React from 'react'
-import { Animated, ViewStyle } from 'react-native'
+import React, { MutableRefObject, RefObject } from 'react'
+import { Animated, LayoutRectangle, ScrollView, ViewStyle } from 'react-native'
 import Reanimated from 'react-native-reanimated'
 import styles from './styles'
 import useDraggableItemHooks from './useDraggableItemHooks'
@@ -24,6 +24,11 @@ const DraggableItem = ({
   isDragging,
   animDirection,
   animMoveDuration,
+  scrollThreshold,
+  listRef,
+  listLayoutRef,
+  listContentHeightRef,
+  listOffsetYRef,
   renderOnEditOverlay,
   startAnim,
   endAnim,
@@ -46,6 +51,11 @@ const DraggableItem = ({
   isDragging: boolean
   animDirection: MOVEMENT
   animMoveDuration: number
+  scrollThreshold?: number | undefined
+  listRef: RefObject<ScrollView>
+  listLayoutRef: MutableRefObject<LayoutRectangle | undefined>
+  listContentHeightRef: MutableRefObject<number | undefined>
+  listOffsetYRef: MutableRefObject<number | undefined>
   renderOnEditOverlay?: ({ index }: { index: number }) => React.ReactElement | null
   startAnim: () => void
   endAnim: () => void
@@ -87,7 +97,12 @@ const DraggableItem = ({
     itemLength,
     isEditing,
     animMoveDuration,
+    scrollThreshold,
     shouldAnimOnRelease,
+    listRef,
+    listLayoutRef,
+    listContentHeightRef,
+    listOffsetYRef,
     startAnim,
     endAnim,
     onStartDrag,

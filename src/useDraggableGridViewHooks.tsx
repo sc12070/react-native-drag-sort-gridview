@@ -1,6 +1,13 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 import update from 'react-addons-update'
-import { Dimensions } from 'react-native'
+import {
+  Dimensions,
+  LayoutChangeEvent,
+  LayoutRectangle,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView
+} from 'react-native'
 import { MOVEMENT } from './models'
 
 export default <T,>({
@@ -11,7 +18,10 @@ export default <T,>({
   numColumns,
   shouldAnimOnRelease,
   onOrderChanged,
-  onMovingStateChanged
+  onMovingStateChanged,
+  propsOnLayout,
+  propsOnContentSizeChange,
+  propsOnScroll
 }: {
   data: Array<T>
   debounce?: number | undefined
@@ -21,6 +31,9 @@ export default <T,>({
   shouldAnimOnRelease: boolean
   onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
   onMovingStateChanged?: (isMoving: boolean) => void
+  propsOnLayout?: (event: LayoutChangeEvent) => void
+  propsOnContentSizeChange?: (w: number, h: number) => void
+  propsOnScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
 }) => {
   const [isLock, setIsLock] = useState<boolean>(false)
   const [isEnableScroll, setIsEnableScroll] = useState<boolean>(true)
@@ -64,6 +77,11 @@ export default <T,>({
   const itemHeight = useMemo(() => propsItemHeight || itemWidth, [propsItemHeight, itemWidth])
   const sectionWidth = useMemo(() => itemWidth / 2, [itemWidth])
   const sectionHeight = useMemo(() => itemHeight / 2, [itemHeight])
+
+  const listRef = useRef<ScrollView>(null)
+  const listLayoutRef = useRef<LayoutRectangle>()
+  const listContentHeightRef = useRef<number>()
+  const listOffsetYRef = useRef<number>()
 
   const debounceTimerRef = useRef<number | undefined>()
   const animatingCount = useRef<number>(0)
@@ -151,6 +169,42 @@ export default <T,>({
     [shouldAnimOnRelease, changeOrder]
   )
 
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      propsOnLayout && propsOnLayout(event)
+      setTimeout(
+        () =>
+          // @ts-ignore
+          listRef?.current?.measureInWindow((x, y, width, height) => {
+            listLayoutRef.current = {
+              width,
+              height,
+              x,
+              y
+            }
+          }),
+        1
+      )
+    },
+    [propsOnLayout]
+  )
+
+  const onContentSizeChange = useCallback(
+    (w: number, h: number) => {
+      listContentHeightRef.current = h
+      propsOnContentSizeChange && propsOnContentSizeChange(w, h)
+    },
+    [propsOnContentSizeChange]
+  )
+
+  const onScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      listOffsetYRef.current = event.nativeEvent.contentOffset.y
+      propsOnScroll && propsOnScroll(event)
+    },
+    [propsOnScroll]
+  )
+
   return {
     isLock,
     isDragging,
@@ -161,6 +215,13 @@ export default <T,>({
     itemHeight,
     sectionWidth,
     sectionHeight,
+    listRef,
+    listLayoutRef,
+    listContentHeightRef,
+    listOffsetYRef,
+    onLayout,
+    onContentSizeChange,
+    onScroll,
     startAnim,
     endAnim,
     onStartDrag,

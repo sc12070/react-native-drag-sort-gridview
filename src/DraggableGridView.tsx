@@ -1,5 +1,13 @@
 import React from 'react'
-import { ScrollView, ScrollViewProps, View, ViewStyle } from 'react-native'
+import {
+  LayoutChangeEvent,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  ScrollViewProps,
+  View,
+  ViewStyle
+} from 'react-native'
 import DraggableItem from './components/DraggableItem'
 import styles from './styles'
 import useDraggableGridViewHooks from './useDraggableGridViewHooks'
@@ -16,11 +24,15 @@ const DraggableGridView = <T,>(
     animMoveDuration?: number
     numColumns: number
     debounce?: number | undefined
+    scrollThreshold?: number | undefined
     renderItem: ({ item, index }: { item: T; index: number }) => React.ReactElement | null
     renderOnEditOverlay?: ({ index }: { index: number }) => React.ReactElement | null
     keyExtractor: (item: T, index: number) => string
     onOrderChanged: (orderedData: Array<T>, from: number, to: number) => void
     onMovingStateChanged?: (isMoving: boolean) => void
+    onLayout?: (event: LayoutChangeEvent) => void
+    onContentSizeChange?: (w: number, h: number) => void
+    onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
   }
 ) => {
   const {
@@ -35,12 +47,16 @@ const DraggableGridView = <T,>(
     itemHeight: propsItemHeight,
     numColumns,
     animMoveDuration,
+    scrollThreshold,
     debounce,
     renderItem: propsRenderItem,
     renderOnEditOverlay,
     keyExtractor,
     onOrderChanged,
-    onMovingStateChanged
+    onMovingStateChanged,
+    onLayout: propsOnLayout,
+    onContentSizeChange: propsOnContentSizeChange,
+    onScroll: propsOnScroll
   } = props
 
   const {
@@ -53,6 +69,13 @@ const DraggableGridView = <T,>(
     itemHeight,
     sectionWidth,
     sectionHeight,
+    listRef,
+    listLayoutRef,
+    listContentHeightRef,
+    listOffsetYRef,
+    onLayout,
+    onContentSizeChange,
+    onScroll,
     startAnim,
     endAnim,
     onStartDrag,
@@ -66,7 +89,10 @@ const DraggableGridView = <T,>(
     debounce,
     shouldAnimOnRelease,
     onOrderChanged,
-    onMovingStateChanged
+    onMovingStateChanged,
+    propsOnLayout,
+    propsOnContentSizeChange,
+    propsOnScroll
   })
 
   const renderItem = ({ item, index }: { item: T; index: number }) => (
@@ -86,6 +112,11 @@ const DraggableGridView = <T,>(
       shouldVibrate={shouldVibrate}
       shouldAnimOnRelease={shouldAnimOnRelease}
       animMoveDuration={animMoveDuration || 500}
+      scrollThreshold={scrollThreshold}
+      listRef={listRef}
+      listLayoutRef={listLayoutRef}
+      listContentHeightRef={listContentHeightRef}
+      listOffsetYRef={listOffsetYRef}
       renderOnEditOverlay={renderOnEditOverlay}
       startAnim={startAnim}
       endAnim={endAnim}
@@ -100,6 +131,11 @@ const DraggableGridView = <T,>(
     <>
       <ScrollView
         {...props}
+        ref={listRef}
+        onLayout={onLayout}
+        onContentSizeChange={onContentSizeChange}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         style={[styles.list, style, { width: listWidth }]}
         contentContainerStyle={[contentContainerStyle, styles.content]}
         scrollEnabled={isEnableScroll}>
