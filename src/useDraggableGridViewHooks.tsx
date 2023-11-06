@@ -83,7 +83,7 @@ export default <T,>({
   const listContentHeightRef = useRef<number>()
   const listOffsetYRef = useRef<number>()
 
-  const debounceTimerRef = useRef<number | undefined>()
+  const debounceTimerRef = useRef<number | NodeJS.Timeout | undefined>()
   const animatingCount = useRef<number>(0)
   const pendingFrom = useRef<number | undefined>()
   const pendingTo = useRef<number | undefined>()
@@ -172,18 +172,16 @@ export default <T,>({
   const onLayout = useCallback(
     (event: LayoutChangeEvent) => {
       propsOnLayout && propsOnLayout(event)
-      setTimeout(
-        () =>
-          // @ts-ignore
-          listRef?.current?.measureInWindow((x, y, width, height) => {
-            listLayoutRef.current = {
-              width,
-              height,
-              x,
-              y
-            }
-          }),
-        1
+      requestAnimationFrame(() =>
+        // @ts-ignore
+        listRef?.current?.measureInWindow((x, y, width, height) => {
+          listLayoutRef.current = {
+            width,
+            height,
+            x,
+            y
+          }
+        })
       )
     },
     [propsOnLayout]

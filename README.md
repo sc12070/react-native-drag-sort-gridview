@@ -7,7 +7,11 @@
 
 ## Getting started
 
-Animation is accelerated by react-native-reanimated and react-addons-update. Please install and setup [react-native-reanimated](https://github.com/kmagiera/react-native-reanimated)
+- react-native-animated 3: >= 1.4.1
+
+- react-native-animated 2: <= 1.4.1
+
+Animation is accelerated by react-native-reanimated and react-addons-update. Please install and setup [react-native-reanimated](https://github.com/kmagiera/react-native-reanimated).
 
 ```
 npm install react-native-drag-sort-gridview --save
@@ -29,7 +33,7 @@ yarn add react-native-drag-sort-gridview react-addons-update
 ```ts
 import React, { memo, useCallback, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import DraggableGridView from 'ddd'
+import DraggableGridView from 'react-native-drag-sort-gridview'
 
 interface IItem {
   id: number
