@@ -5639,10 +5639,10 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native-drag-sort-gridview@1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/react-native-drag-sort-gridview/-/react-native-drag-sort-gridview-1.4.1.tgz#8a3854d06b9de6783c9475704a8f3cf51aeac8a6"
-  integrity sha512-Lxtccm49kiV4gXsbKhB2tOlDNcTYjU1zp0IIw4cO4BQ07kGLernyAwX+qGu6VBWzwRI8PwUs98nT+3QaoG/eTw==
+react-native-drag-sort-gridview@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/react-native-drag-sort-gridview/-/react-native-drag-sort-gridview-1.4.2.tgz#91a2b943f8cddb0a07a993f5be961d0e838fe387"
+  integrity sha512-466J6yA4AN8IitQCefrko0C7aig6xfGzQS/yAn1J1N18d/qzR2kpF70MMIt0ui8Zd6u3ViIHC3FJ5OTHbSuyHg==
 
 react-native-reanimated@^3.3.0:
   version "3.5.4"
