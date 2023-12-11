@@ -28,10 +28,6 @@ or
 yarn add react-native-drag-sort-gridview react-addons-update
 ```
 
-## Example
-
-[Examples](./example)
-
 ## Simple Usage
 
 ```ts
