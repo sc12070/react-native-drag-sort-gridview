@@ -4,11 +4,13 @@
   "version": "1.4.2",
   "description": "A draggable and sortable grid view for react native",
   "files": [
+    "src",
     "dist"
   ],
   "main": "dist/commonjs/index",
   "module": "dist/module/index",
   "types": "dist/typescript/index.d.ts",
+  "react-native": "src/index.tsx",
   "scripts": {
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
