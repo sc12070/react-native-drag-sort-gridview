@@ -5,6 +5,10 @@
 ![](./example/__doc__/definedSize.gif)
 ![](./example/__doc__/dynamicItemWidth.gif)
 
+## Example
+
+[Examples](./example)
+
 ## Getting started
 
 - react-native-animated 3: >= 1.4.1
