@@ -17,6 +17,7 @@ const DraggableItem = ({
   sectionHeight,
   numColumns,
   isEditing,
+  isRTL,
   shouldVibrate,
   shouldAnimOnRelease,
   index,
@@ -44,6 +45,7 @@ const DraggableItem = ({
   numColumns: number
   style?: ViewStyle
   isEditing: boolean
+  isRTL: boolean
   shouldVibrate: boolean
   shouldAnimOnRelease: boolean
   index: number
@@ -63,8 +65,9 @@ const DraggableItem = ({
   updateDragToIndex: (index: number | undefined) => void
   onEndDrag: (from: number, to: number) => void
 }) => {
-  const { isDraggingItem } = useDraggableItemHooks({
-    animDirection
+  const { isDraggingItem, multiplierRTL } = useDraggableItemHooks({
+    animDirection,
+    isRTL
   })
 
   const { animatedStyles } = useReanimHooks({
@@ -83,6 +86,7 @@ const DraggableItem = ({
     index,
     animDirection,
     animMoveDuration,
+    multiplierRTL,
     startAnim,
     endAnim
   })
@@ -96,6 +100,7 @@ const DraggableItem = ({
     index,
     itemLength,
     isEditing,
+    isRTL,
     animMoveDuration,
     scrollThreshold,
     shouldAnimOnRelease,
@@ -103,6 +108,7 @@ const DraggableItem = ({
     listLayoutRef,
     listContentHeightRef,
     listOffsetYRef,
+    multiplierRTL,
     startAnim,
     endAnim,
     onStartDrag,

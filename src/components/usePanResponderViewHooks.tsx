@@ -17,6 +17,7 @@ export default ({
   listLayoutRef,
   listContentHeightRef,
   listOffsetYRef,
+  multiplierRTL,
   startAnim,
   endAnim,
   onStartDrag,
@@ -31,6 +32,7 @@ export default ({
   index: number
   itemLength: number
   isEditing: boolean
+  isRTL: boolean
   animMoveDuration: number
   scrollThreshold?: number | undefined
   shouldAnimOnRelease: boolean
@@ -38,6 +40,7 @@ export default ({
   listLayoutRef: MutableRefObject<LayoutRectangle | undefined>
   listContentHeightRef: MutableRefObject<number | undefined>
   listOffsetYRef: MutableRefObject<number | undefined>
+  multiplierRTL: number
   startAnim: () => void
   endAnim: () => void
   onStartDrag: (index: number) => void
@@ -98,7 +101,8 @@ export default ({
           startAnim()
         },
         onPanResponderMove: (_evt, gestureState) => {
-          const { dx, dy, moveY } = gestureState
+          const { dx: gestureStateDX, dy, moveY } = gestureState
+          const dx = gestureStateDX * multiplierRTL
 
           if (scrollThreshold && scrollThreshold > 0) {
             const listHeight = listLayoutRef.current?.height || 0
@@ -142,7 +146,7 @@ export default ({
             updateDragToIndex(newToIndex)
           }
 
-          dragXAnimRef.current.setValue(dx)
+          dragXAnimRef.current.setValue(gestureStateDX)
           dragYAnimRef.current.setValue(dy + currentOffsetY.current)
         },
         onPanResponderTerminationRequest: (_evt, _gestureState) => false,
@@ -151,6 +155,7 @@ export default ({
           onPressRelease(toIndex)
           if (shouldAnimOnRelease === true) {
             const { dx, dy } = gestureState
+
             const distinationX = ((toIndex % numColumns) - (index % numColumns)) * itemWidth
             const distinationY =
               (Math.floor(toIndex / numColumns) - Math.floor(index / numColumns)) * itemHeight
@@ -161,7 +166,7 @@ export default ({
             )
             Animated.parallel([
               Animated.timing(dragXAnimRef.current, {
-                toValue: distinationX,
+                toValue: distinationX * multiplierRTL,
                 duration,
                 useNativeDriver: true
               }),

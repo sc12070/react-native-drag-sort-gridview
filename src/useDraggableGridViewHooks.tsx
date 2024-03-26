@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
-import update from 'react-addons-update'
+import update from 'immutability-helper'
 import {
   Dimensions,
   LayoutChangeEvent,

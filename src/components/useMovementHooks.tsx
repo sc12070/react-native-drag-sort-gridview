@@ -12,6 +12,7 @@ export default ({
   index,
   animDirection,
   animMoveDuration,
+  multiplierRTL,
   startAnim,
   endAnim
 }: {
@@ -25,6 +26,7 @@ export default ({
   index: number
   animDirection: MOVEMENT
   animMoveDuration: number
+  multiplierRTL: number
   startAnim: () => void
   endAnim: () => void
 }) => {
@@ -60,7 +62,7 @@ export default ({
     if (index % numColumns === 0) {
       Animated.parallel([
         Animated.timing(moveXAnimRef.current, {
-          toValue: itemWidth * (numColumns - 1),
+          toValue: itemWidth * (numColumns - 1) * multiplierRTL,
           duration: animMoveDuration,
           useNativeDriver: true,
           easing: Easing.out(Easing.ease)
@@ -74,7 +76,7 @@ export default ({
       ]).start(endAnim)
     } else {
       Animated.timing(moveXAnimRef.current, {
-        toValue: -itemWidth,
+        toValue: -itemWidth * multiplierRTL,
         duration: animMoveDuration,
         useNativeDriver: true,
         easing: Easing.out(Easing.ease)
@@ -88,7 +90,7 @@ export default ({
     if (index % numColumns === numColumns - 1) {
       Animated.parallel([
         Animated.timing(moveXAnimRef.current, {
-          toValue: -itemWidth * (numColumns - 1),
+          toValue: -itemWidth * (numColumns - 1) * multiplierRTL,
           duration: animMoveDuration,
           useNativeDriver: true,
           easing: Easing.out(Easing.ease)
@@ -102,7 +104,7 @@ export default ({
       ]).start(endAnim)
     } else {
       Animated.timing(moveXAnimRef.current, {
-        toValue: itemWidth,
+        toValue: itemWidth * multiplierRTL,
         duration: animMoveDuration,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.ease)

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import update from 'react-addons-update'
+import update from 'immutability-helper'
 import { IItem } from './modal'
 
 export default () => {

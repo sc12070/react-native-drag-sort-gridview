@@ -18,6 +18,7 @@ const DraggableGridView = <T,>(
     listWidth?: number
     itemHeight?: number
     isEditing: boolean
+    isRTL?: boolean
     shouldVibrate?: boolean
     shouldAnimOnRelease?: boolean
     itemContainerStyle?: ViewStyle
@@ -40,6 +41,7 @@ const DraggableGridView = <T,>(
     contentContainerStyle,
     data,
     isEditing,
+    isRTL = false,
     shouldVibrate = true,
     shouldAnimOnRelease = false,
     itemContainerStyle,
@@ -109,6 +111,7 @@ const DraggableGridView = <T,>(
       animDirection={animDirectionArray[index]}
       index={index}
       isEditing={isEditing}
+      isRTL={isRTL}
       shouldVibrate={shouldVibrate}
       shouldAnimOnRelease={shouldAnimOnRelease}
       animMoveDuration={animMoveDuration || 500}
