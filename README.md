@@ -19,13 +19,13 @@ Animation is accelerated by react-native-reanimated and react-addons-update. Ple
 
 ```
 npm install react-native-drag-sort-gridview --save
-npm install react-addons-update --save
+npm install immutability-helper --save
 ```
 
 or
 
 ```
-yarn add react-native-drag-sort-gridview react-addons-update
+yarn add react-native-drag-sort-gridview immutability-helper
 ```
 
 ## Simple Usage
